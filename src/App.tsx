@@ -1,25 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import AppContainer from "./AppContainer";
+import Header from "./Header";
+
+const formFields = [
+  { id: 1, label: "First Name", type: "text" },
+  { id: 2, label: "Last Name", type: "text" },
+  { id: 3, label: "Email", type: "email" },
+  { id: 4, label: "Phone Number", type: "tel" },
+  { id: 5, label: "Date of Birth", type: "date" },
+];
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <AppContainer>
+      <div className="p-4 mx-auto max-w-xl bg-white shadow-lg rounded-xl">
+        <Header title="Welcome to #react-typescript with #tailwindcss" />
+
+        {formFields.map((field) => (
+          <div className="p-2" key={field.id}>
+            <label className="font-medium">{field.label}</label>
+            <input
+              type={field.type}
+              className="border-2 border-gray-200 p-2 rounded-lg  w-full"
+            />
+          </div>
+        ))}
+
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 m-2 rounded-lg font-bold"
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          Submit
+        </button>
+      </div>
+    </AppContainer>
   );
 }
 
