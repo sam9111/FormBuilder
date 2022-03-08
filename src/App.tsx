@@ -1,5 +1,5 @@
 import AppContainer from "./AppContainer";
-import Header from "./Header";
+import Header from "./components/Header";
 
 import React, { useState } from "react";
 import Form from "./components/Form";
@@ -16,7 +16,7 @@ function App() {
   };
   return (
     <AppContainer>
-      <div className="p-4 mx-auto   bg-white shadow-lg rounded-xl">
+      <div className="p-4 mx-auto my-4  bg-white shadow-lg rounded-xl">
         <Header title="Welcome to #react-typescript with #tailwindcss" />
         {state === "HOME" ? (
           <Home openFormCB={openForm} />
