@@ -9,7 +9,7 @@ export default function Header(props: { title: string }) {
         alt="logo"
         style={{ animation: "spin 2s linear infinite" }}
       />
-      <h1 className="text-center text-xl flex-1 font-bold">{props.title}</h1>
+      <h1 className="text-center text-2xl flex-1 font-bold">{props.title}</h1>
     </div>
   );
 }
