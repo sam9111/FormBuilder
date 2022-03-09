@@ -3,35 +3,20 @@ import { useEffect, useState, useRef } from "react";
 import LabelledInput from "./LabelledInput";
 
 import { FormData } from "../interfaces";
-import { FormField } from "../interfaces";
 
-const initialFormFields: FormField[] = [
-  { id: 1, label: "First Name", type: "text", value: "" },
-  { id: 2, label: "Last Name", type: "text", value: "" },
-  { id: 3, label: "Email", type: "email", value: "" },
-  { id: 4, label: "Phone Number", type: "tel", value: "" },
-  { id: 5, label: "Date of Birth", type: "date", value: "" },
-];
-
-const getLocalForms: () => FormData[] = () => {
-  const savedFormsJSON = localStorage.getItem("savedForms");
-  return savedFormsJSON ? JSON.parse(savedFormsJSON) : [];
-};
+import { getLocalForms, saveLocalForms } from "../functions";
 
 const fetchForm: any = (id: number) => {
   const localForms = getLocalForms();
-  return localForms.filter((form) => form.id === id).pop();
+  return localForms.filter((form: FormData) => form.id === id).pop();
 };
 
 const saveFormData = (currentState: FormData) => {
   const localForms = getLocalForms();
-  const updatedLocalForms = localForms.map((form) => {
+  const updatedLocalForms = localForms.map((form: FormData) => {
     return form.id === currentState.id ? currentState : form;
   });
   saveLocalForms(updatedLocalForms);
-};
-const saveLocalForms = (localForms: FormData[]) => {
-  localStorage.setItem("savedForms", JSON.stringify(localForms));
 };
 
 export default function Form(props: {
