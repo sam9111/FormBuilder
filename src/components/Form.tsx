@@ -81,7 +81,6 @@ export default function Form(props: {
   const clearForm = () => {
     setState({
       ...state,
-      title: "",
       formFields: state.formFields.map((field) => ({ ...field, value: "" })),
     });
   };
@@ -89,6 +88,8 @@ export default function Form(props: {
   return (
     <div className="flex flex-col gap-2 p-4 divide-y-4 divide-dotted my-4">
       <div className="flex flex-col">
+        <h2 className=" text-xl flex-1 font-bold">Edit Form</h2>
+        <span className="text-gray-500 text-sm py-4 ">ID: {props.formID}</span>
         <label className="font-medium">Title</label>
         <input
           type="text"
@@ -126,24 +127,27 @@ export default function Form(props: {
           onClick={() => {
             newField.length > 0 && addField();
           }}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Add Field
         </button>
       </div>
       <div className="flex gap-4">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg">
+        <button
+          onClick={() => saveFormData(state)}
+          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+        >
           Submit
         </button>
         <button
           onClick={clearForm}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Clear Form
         </button>
         <button
           onClick={props.closeFormCB}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Close Form
         </button>
