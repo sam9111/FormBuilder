@@ -8,7 +8,7 @@ export default function LabelledInput(props: {
 }) {
   return (
     <>
-      <label>{props.label}</label>
+      <label className="font-medium">{props.label}</label>
       <div className="flex gap-2">
         <input
           type={props.fieldType}

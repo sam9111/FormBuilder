@@ -88,16 +88,19 @@ export default function Form(props: {
 
   return (
     <div className="flex flex-col gap-2 p-4 divide-y-4 divide-dotted my-4">
-      <input
-        type="text"
-        className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
-        value={state.title}
-        onChange={(e) => {
-          setState({ ...state, title: e.target.value });
-        }}
-        ref={titleRef}
-      />
-      <div>
+      <div className="flex flex-col">
+        <label className="font-medium">Title</label>
+        <input
+          type="text"
+          className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
+          value={state.title}
+          onChange={(e) => {
+            setState({ ...state, title: e.target.value });
+          }}
+          ref={titleRef}
+        />
+      </div>
+      <div className="py-2">
         {state.formFields.map((field) => (
           <LabelledInput
             key={field.id}
@@ -110,7 +113,7 @@ export default function Form(props: {
           />
         ))}
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-4 py-2">
         <input
           type="text"
           className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
