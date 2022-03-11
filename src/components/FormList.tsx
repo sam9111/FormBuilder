@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
+import { ActiveLink, Link, navigate } from "raviger";
+import { FormData, FormField } from "../types/interfaces";
 
-import { FormData, FormField } from "../interfaces";
-
-import { getLocalForms, saveLocalForms } from "../functions";
+import { getLocalForms, saveLocalForms } from "../utils/functions";
 import Form from "./Form";
-
+import { useQueryParams } from "raviger";
 const initialFormFields: FormField[] = [
   { id: 1, label: "First Name", type: "text", value: "" },
   { id: 2, label: "Last Name", type: "text", value: "" },
@@ -13,10 +13,11 @@ const initialFormFields: FormField[] = [
   { id: 5, label: "Date of Birth", type: "date", value: "" },
 ];
 
-export default function FormList(props: { closeFormCB: () => void }) {
+export default function FormList() {
   const [state, setState] = useState<FormData[]>(() => getLocalForms());
   const [formID, setFormID] = useState(0);
-
+  const [{ search }, setQuery] = useQueryParams();
+  const [searchString, setSearchString] = useState("");
   const createForm = () => {
     const localForms = getLocalForms();
     const newForm = {
@@ -25,7 +26,7 @@ export default function FormList(props: { closeFormCB: () => void }) {
       formFields: initialFormFields,
     };
     saveLocalForms([...localForms, newForm]);
-    setFormID(() => newForm.id);
+    navigate(`/form/${newForm.id}`);
     setState(() => getLocalForms());
   };
 
@@ -44,20 +45,54 @@ export default function FormList(props: { closeFormCB: () => void }) {
 
   return (
     <div>
-      {formID ? (
-        <Form closeFormCB={() => setFormID(0)} formID={formID} />
-      ) : (
-        <div className="flex flex-col gap-2 my-4 p-4">
-          <div className="flex justify-between  items-center mb-2">
-            <h2 className=" text-xl flex-1 font-bold">All Forms</h2>
-            <button
-              onClick={() => createForm()}
-              className="  text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-            >
-              Create
-            </button>
-          </div>
-          {state.map((form) => {
+      <div className="flex flex-col gap-2 my-4 p-4">
+        <div className="flex justify-between  items-center mb-2">
+          <h2 className=" text-xl flex-1 font-bold">All Forms</h2>
+          <button
+            onClick={() => createForm()}
+            className="  text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          >
+            Create
+          </button>
+        </div>
+        <div>
+          <form
+            className=""
+            onSubmit={(e) => {
+              e.preventDefault();
+              setQuery({ search: searchString });
+            }}
+          >
+            {" "}
+            <div className="flex flex-wrap w-full ">
+              <input
+                className="appearance-none block w-full bg-gray-100   rounded-lg py-3 px-4 leading-tight "
+                id="grid-search"
+                name="search"
+                value={searchString}
+                onChange={(e) => setSearchString(e.target.value)}
+                type="search"
+                placeholder="Search"
+              />
+            </div>
+          </form>
+          <button
+            onClick={() => {
+              setSearchString("");
+              setQuery("");
+            }}
+            className=" text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 my-4 p-4">
+        {state
+          .filter((form) =>
+            form.title.toLowerCase().includes(search?.toLowerCase() || "")
+          )
+          .map((form) => {
             return (
               <div
                 key={form.id}
@@ -68,12 +103,12 @@ export default function FormList(props: { closeFormCB: () => void }) {
                 <div className="flex flex-row items-center justify-between">
                   <h3 className="">{form.title}</h3>
                   <div className="flex gap-4">
-                    <button
-                      onClick={() => setFormID(form.id)}
+                    <Link
+                      href={`/form/${form.id}`}
                       className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
                     >
                       Open
-                    </button>
+                    </Link>
                     <button
                       onClick={() => deleteForm(form.id)}
                       className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
@@ -85,16 +120,7 @@ export default function FormList(props: { closeFormCB: () => void }) {
               </div>
             );
           })}
-          <div className="flex  ">
-            <button
-              onClick={props.closeFormCB}
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-            >
-              Back to Home
-            </button>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 
 import LabelledInput from "./LabelledInput";
+import { ActiveLink, Link } from "raviger";
+import { FormData } from "../types/interfaces";
 
-import { FormData } from "../interfaces";
-
-import { getLocalForms, saveLocalForms } from "../functions";
+import { getLocalForms, saveLocalForms } from "../utils/functions";
 
 const fetchForm: any = (id: number) => {
   const localForms = getLocalForms();
@@ -19,10 +19,7 @@ const saveFormData = (currentState: FormData) => {
   saveLocalForms(updatedLocalForms);
 };
 
-export default function Form(props: {
-  closeFormCB: () => void;
-  formID: number;
-}) {
+export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
   const titleRef = useRef<HTMLInputElement>(null);
@@ -145,12 +142,12 @@ export default function Form(props: {
         >
           Clear Form
         </button>
-        <button
-          onClick={props.closeFormCB}
+        <Link
+          href={`/`}
           className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Close Form
-        </button>
+        </Link>
       </div>
     </div>
   );
