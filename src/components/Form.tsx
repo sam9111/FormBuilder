@@ -1,15 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 
 import LabelledInput from "./LabelledInput";
-import { ActiveLink, Link } from "raviger";
+import { Link } from "raviger";
 import { FormData } from "../types/interfaces";
 
-import {
-  getLocalForms,
-  saveLocalForms,
-  fetchForm,
-  saveFormData,
-} from "../utils/storageUtils";
+import { fetchForm, saveFormData } from "../utils/storageUtils";
 
 export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));

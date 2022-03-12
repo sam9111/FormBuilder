@@ -1,4 +1,4 @@
-import { FormData, FormField } from "../types/interfaces";
+import { FormField } from "../types/interfaces";
 
 export default function FieldPreview(props: {
   field: FormField;

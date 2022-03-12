@@ -1,5 +1,4 @@
-import { ActiveLink, Link } from "raviger";
-import logo from "../logo.svg";
+import { ActiveLink } from "raviger";
 
 export default function Header() {
   return (

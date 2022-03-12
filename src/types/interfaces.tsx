@@ -9,3 +9,8 @@ export interface FormData {
   title: string;
   formFields: FormField[];
 }
+
+export interface Answer {
+  id: number;
+  value: string;
+}
