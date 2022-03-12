@@ -34,7 +34,7 @@ export default function Preview(props: { formID: number }) {
 
   return (
     <div className=" justify-between items-center my-4 p-4 ">
-      <div className="flex justify-between items-center">
+      {/* <div className="flex justify-between items-center">
         <h2 className=" text-xl  font-bold">Preview Form</h2>
         <Link
           href={`/form/${form.id}`}
@@ -42,47 +42,53 @@ export default function Preview(props: { formID: number }) {
         >
           Back to Form
         </Link>
-      </div>
+      </div> */}
 
-      <div className="rounded-lg bg-gray-100 px-8 py-2 m-8  ">
-        <h2 className="text-center text-xl font-bold mx-auto p-8">
-          {form.title}
-        </h2>
+      {form.formFields.length > 0 ? (
+        <div className="rounded-lg bg-gray-100 px-8 py-2 m-8  ">
+          <h2 className="text-center text-xl font-bold mx-auto p-8">
+            {form.title}
+          </h2>
 
-        <FieldPreview field={fieldState} addValueCB={addValue} />
-        <div className="flex gap-2 my-4">
-          <button
-            onClick={() => {
-              const currIndex = form.formFields.findIndex(
-                (field) => field.id === fieldState.id
-              );
-              setFieldState(
-                form.formFields[currIndex - 1]
-                  ? form.formFields[currIndex - 1]
-                  : form.formFields[0]
-              );
-            }}
-            className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => {
-              const currIndex = form.formFields.findIndex(
-                (field) => field.id === fieldState.id
-              );
-              setFieldState(
-                form.formFields[currIndex + 1]
-                  ? form.formFields[currIndex + 1]
-                  : form.formFields[0]
-              );
-            }}
-            className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-          >
-            Next
-          </button>
+          <FieldPreview field={fieldState} addValueCB={addValue} />
+          <div className="flex gap-2 my-4">
+            <button
+              onClick={() => {
+                const currIndex = form.formFields.findIndex(
+                  (field) => field.id === fieldState.id
+                );
+                setFieldState(
+                  form.formFields[currIndex - 1]
+                    ? form.formFields[currIndex - 1]
+                    : form.formFields[0]
+                );
+              }}
+              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => {
+                const currIndex = form.formFields.findIndex(
+                  (field) => field.id === fieldState.id
+                );
+                setFieldState(
+                  form.formFields[currIndex + 1]
+                    ? form.formFields[currIndex + 1]
+                    : form.formFields[0]
+                );
+              }}
+              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            >
+              Next
+            </button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <p className="text-center text-lg  mx-auto p-8">
+          Add fields to this form to see a preview.
+        </p>
+      )}
     </div>
   );
 }

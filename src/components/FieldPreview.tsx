@@ -6,9 +6,7 @@ export default function FieldPreview(props: {
 }) {
   return (
     <div className="flex flex-col mx-auto  gap-4">
-      <label className="text-lg  font-semibold ">
-        {props.field.id}. {props.field.label}
-      </label>
+      <label className="text-lg  font-semibold ">{props.field.label}</label>
       <input
         type={props.field.type}
         value={props.field.value}

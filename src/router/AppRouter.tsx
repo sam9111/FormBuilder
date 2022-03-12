@@ -7,9 +7,22 @@ import About from "../components/About";
 import Preview from "../components/Preview";
 import QuestionPreview from "../components/FieldPreview";
 const routes = {
-  "/": () => <FormList />,
-  "/about": () => <About />,
-  "/form/:id": ({ id }: { id: string }) => <Form formID={Number(id)} />,
+  "/": () => (
+    <AppContainer>
+      <FormList />
+    </AppContainer>
+  ),
+  "/about": () => (
+    <AppContainer>
+      {" "}
+      <About />{" "}
+    </AppContainer>
+  ),
+  "/form/:id": ({ id }: { id: string }) => (
+    <AppContainer>
+      <Form formID={Number(id)} />
+    </AppContainer>
+  ),
   "/preview/:formID": ({ formID }: { formID: string }) => (
     <Preview formID={Number(formID)} />
   ),
@@ -17,9 +30,5 @@ const routes = {
 
 export default function AppRouter() {
   const routeResult = useRoutes(routes);
-  return (
-    <AppContainer>{routeResult}</AppContainer> || (
-      <div className="h-screen flex items-center"> </div>
-    )
-  );
+  return routeResult || <div className="">404</div>;
 }

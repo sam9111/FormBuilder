@@ -38,18 +38,23 @@ export default function Form(props: { formID: number }) {
       ...state,
       formFields: [
         ...state.formFields,
-        { id: Number(new Date()), label: newField, type: "text", value: "" },
+        {
+          id: Number(new Date()),
+          label: newField,
+          type: "text",
+          value: "",
+        },
       ],
     });
     setNewField("");
   };
 
-  const addValue = (id: number, value: string) => {
+  const editLabel = (id: number, value: string) => {
     const field = state.formFields.find((field) => field.id === id);
     if (field) {
       const newField = {
         ...field,
-        value: value,
+        label: value,
       };
       setState({
         ...state,
@@ -70,12 +75,12 @@ export default function Form(props: { formID: number }) {
   const clearForm = () => {
     setState({
       ...state,
-      formFields: state.formFields.map((field) => ({ ...field, value: "" })),
+      formFields: state.formFields.map((field) => ({ ...field, label: "" })),
     });
   };
 
   return (
-    <div className="flex flex-col gap-2 p-4 divide-y-4 divide-dotted my-4">
+    <div className="flex flex-col gap-4 p-4 divide-y-4 divide-dotted my-4">
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
           <h2 className=" text-xl  font-bold">Edit Form</h2>
@@ -86,8 +91,11 @@ export default function Form(props: { formID: number }) {
             Preview
           </Link>
         </div>
-        <span className="text-gray-500 text-sm py-4 ">ID: {props.formID}</span>
-        <label className="font-medium">Title</label>
+
+        <span className="text-gray-500 text-sm py-4 font-semibold ">
+          ID: {props.formID}
+        </span>
+        <label className="font-semibold text-lg">Title</label>
         <input
           type="text"
           className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
@@ -99,15 +107,16 @@ export default function Form(props: { formID: number }) {
         />
       </div>
       <div className="py-2">
+        <h3 className=" text-lg  font-semibold my-4">Edit Fields</h3>
         {state.formFields.map((field) => (
           <LabelledInput
             key={field.id}
             id={field.id}
             label={field.label}
             fieldType={field.type}
-            value={field.value}
+            value={field.label}
             removeFieldCB={removeField}
-            addValueCB={addValue}
+            editLabelCB={editLabel}
           />
         ))}
       </div>

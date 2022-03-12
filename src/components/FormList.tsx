@@ -101,7 +101,12 @@ export default function FormList() {
                 <span className="text-gray-500 text-sm ">{form.id}</span>
 
                 <div className="flex flex-row items-center justify-between">
-                  <h3 className="">{form.title}</h3>
+                  <div>
+                    <h3 className="">{form.title}</h3>
+                    <p className="text-sm text-gray-500">
+                      {form.formFields.length} Questions
+                    </p>
+                  </div>
                   <div className="flex gap-4">
                     <Link
                       href={`/form/${form.id}`}
