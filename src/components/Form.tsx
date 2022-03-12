@@ -4,20 +4,12 @@ import LabelledInput from "./LabelledInput";
 import { ActiveLink, Link } from "raviger";
 import { FormData } from "../types/interfaces";
 
-import { getLocalForms, saveLocalForms } from "../utils/functions";
-
-const fetchForm: any = (id: number) => {
-  const localForms = getLocalForms();
-  return localForms.filter((form: FormData) => form.id === id).pop();
-};
-
-const saveFormData = (currentState: FormData) => {
-  const localForms = getLocalForms();
-  const updatedLocalForms = localForms.map((form: FormData) => {
-    return form.id === currentState.id ? currentState : form;
-  });
-  saveLocalForms(updatedLocalForms);
-};
+import {
+  getLocalForms,
+  saveLocalForms,
+  fetchForm,
+  saveFormData,
+} from "../utils/storageUtils";
 
 export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
@@ -85,7 +77,15 @@ export default function Form(props: { formID: number }) {
   return (
     <div className="flex flex-col gap-2 p-4 divide-y-4 divide-dotted my-4">
       <div className="flex flex-col">
-        <h2 className=" text-xl flex-1 font-bold">Edit Form</h2>
+        <div className="flex justify-between items-center">
+          <h2 className=" text-xl  font-bold">Edit Form</h2>
+          <Link
+            href={`/preview/${props.formID}`}
+            className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          >
+            Preview
+          </Link>
+        </div>
         <span className="text-gray-500 text-sm py-4 ">ID: {props.formID}</span>
         <label className="font-medium">Title</label>
         <input

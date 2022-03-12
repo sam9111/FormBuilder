@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { ActiveLink, Link, navigate } from "raviger";
 import { FormData, FormField } from "../types/interfaces";
 
-import { getLocalForms, saveLocalForms } from "../utils/functions";
+import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 import Form from "./Form";
 import { useQueryParams } from "raviger";
 const initialFormFields: FormField[] = [
