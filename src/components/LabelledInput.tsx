@@ -10,7 +10,6 @@ export default function LabelledInput(props: {
     <>
       <div className="flex gap-2">
         <input
-          type={props.fieldType}
           value={props.value}
           className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
           onChange={(e) => {
