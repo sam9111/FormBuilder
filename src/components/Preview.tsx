@@ -86,7 +86,7 @@ export default function Preview(props: { formID: number }) {
                 setFieldState(
                   form.formFields[currIndex + 1]
                     ? form.formFields[currIndex + 1]
-                    : form.formFields[0]
+                    : form.formFields[currIndex]
                 );
               }}
               className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
