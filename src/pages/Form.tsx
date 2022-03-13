@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 
-import LabelledInput from "./LabelledInput";
+import LabelledInput from "../components/LabelledInput";
 import { Link } from "raviger";
 import { FormData } from "../types/interfaces";
 

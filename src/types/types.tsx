@@ -23,7 +23,7 @@ export type TextAreaField = {
   value: string;
 };
 
-export type MultiselectField = {
+export type MultiSelectField = {
   kind: "multiselect";
   options: string[];
   label: string;
@@ -53,7 +53,7 @@ export type FormField =
   | TextField
   | RadioInputsField
   | TextAreaField
-  | MultiselectField
+  | MultiSelectField
   | EmailField
   | PhoneNumberField
   | DateField;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FormData, FormField } from "../types/interfaces";
-import FieldPreview from "./FieldPreview";
+import FieldPreview from "../components/FieldPreview";
 import { fetchForm } from "../utils/storageUtils";
 import { Answer } from "../types/interfaces";
 
