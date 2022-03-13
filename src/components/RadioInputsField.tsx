@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { RadioInputs } from "../types/custom";
 export default function RadioInputsField(props: {

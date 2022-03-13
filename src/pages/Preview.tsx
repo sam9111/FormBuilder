@@ -41,8 +41,6 @@ export default function Preview(props: { formID: number }) {
     );
   };
 
-  console.log(answers);
-
   function FieldPreview(fieldState: FormField) {
     switch (fieldState.kind) {
       case "dropdown":

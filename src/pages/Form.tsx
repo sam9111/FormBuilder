@@ -15,8 +15,6 @@ export default function Form(props: { formID: number }) {
   const [newFieldType, setNewFieldType] = useState(FIELD_TYPES[0]);
   const titleRef = useRef<HTMLInputElement>(null);
 
-  console.log(state.formFields);
-
   useEffect(() => {
     document.title = "Form Edit";
     titleRef.current?.focus();

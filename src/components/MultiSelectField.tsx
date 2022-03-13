@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Option } from "../types/interfaces";
-import { FormField, MultiSelect } from "../types/custom";
+import { MultiSelect } from "../types/custom";
 export default function MultiSelectField(props: {
   field: MultiSelect;
   removeFieldCB?: (id: number) => void;

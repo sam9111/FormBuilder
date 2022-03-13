@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Option } from "../types/interfaces";
-import { FormField, Dropdown } from "../types/custom";
+import { Dropdown } from "../types/custom";
 export default function DropdownField(props: {
   field: Dropdown;
   removeFieldCB?: (id: number) => void;

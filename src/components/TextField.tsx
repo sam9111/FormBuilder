@@ -1,4 +1,4 @@
-import { FormField, Text, Date, PhoneNumber, Email } from "../types/custom";
+import { Text, Date, PhoneNumber, Email } from "../types/custom";
 export default function TextField(props: {
   field: Text | Date | PhoneNumber | Email;
   removeFieldCB?: (id: number) => void;
