@@ -4,8 +4,10 @@ import { Link } from "raviger";
 import { FormData, Option } from "../types/interfaces";
 import { FormField, FIELD_TYPES } from "../types/types";
 import { fetchForm, saveFormData } from "../utils/storageUtils";
-import TextFieldInput from "../components/TextFieldInput";
-import DropdownFieldInput from "../components/DropdownFieldInput";
+import TextField from "../components/TextField";
+import DropdownField from "../components/DropdownField";
+import RadioInputsField from "../components/RadioInputsField";
+import TextAreaField from "../components/TextAreaField";
 export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
@@ -49,6 +51,19 @@ export default function Form(props: { formID: number }) {
           ...newFormField,
           kind: "dropdown",
           options: [],
+        };
+        break;
+      case "radio":
+        newFormField = {
+          ...newFormField,
+          kind: "radio",
+          options: [],
+        };
+        break;
+      case "textarea":
+        newFormField = {
+          ...newFormField,
+          kind: "textarea",
         };
         break;
     }
@@ -140,7 +155,7 @@ export default function Form(props: { formID: number }) {
           switch (field.kind) {
             case "text":
               return (
-                <TextFieldInput
+                <TextField
                   key={field.id}
                   id={field.id}
                   label={field.label}
@@ -149,9 +164,10 @@ export default function Form(props: { formID: number }) {
                   editLabelCB={editLabel}
                 />
               );
+
             case "dropdown":
               return (
-                <DropdownFieldInput
+                <DropdownField
                   key={field.id}
                   id={field.id}
                   label={field.label}
@@ -159,6 +175,29 @@ export default function Form(props: { formID: number }) {
                   removeFieldCB={removeField}
                   editLabelCB={editLabel}
                   editOptionsCB={editOptions}
+                />
+              );
+            case "radio":
+              return (
+                <RadioInputsField
+                  key={field.id}
+                  id={field.id}
+                  label={field.label}
+                  value={field.value}
+                  removeFieldCB={removeField}
+                  editLabelCB={editLabel}
+                  editOptionsCB={editOptions}
+                />
+              );
+            case "textarea":
+              return (
+                <TextAreaField
+                  key={field.id}
+                  id={field.id}
+                  label={field.label}
+                  value={field.value}
+                  removeFieldCB={removeField}
+                  editLabelCB={editLabel}
                 />
               );
           }

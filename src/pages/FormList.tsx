@@ -4,8 +4,6 @@ import { FormData } from "../types/interfaces";
 
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 
-import { FormField, TextField } from "../types/types";
-
 import { useQueryParams } from "raviger";
 // const initialFormFields: FormField[] = [
 //   { id: 1, label: "First Name", type: "text", value: "" },

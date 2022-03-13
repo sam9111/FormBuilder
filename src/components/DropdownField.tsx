@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
-export default function DropdownFieldInput(props: {
+export default function DropdownField(props: {
   id: number;
   label: string;
   value: string;
@@ -9,7 +9,7 @@ export default function DropdownFieldInput(props: {
   editOptionsCB: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>([
-    { id: Number(new Date()), value: "untitled" },
+    { id: Number(new Date()), value: "" },
   ]);
 
   const addOption = (value: string, id: number) => {
@@ -27,7 +27,7 @@ export default function DropdownFieldInput(props: {
 
   return (
     <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-      <label>Field</label>
+      <label>Dropdown</label>
       <div className="flex gap-2 w-full">
         <input
           value={props.label}
@@ -62,6 +62,7 @@ export default function DropdownFieldInput(props: {
         <div className="flex flex-col gap-2  ">
           {options.map((option) => (
             <input
+              placeholder="Enter an option value"
               key={option.id}
               value={option.value}
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"

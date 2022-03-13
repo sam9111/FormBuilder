@@ -7,7 +7,7 @@ export default function TextField(props: {
 }) {
   return (
     <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-      <label>Field</label>
+      <label>Text</label>
       <div className="flex gap-2 w-full">
         <input
           value={props.label}

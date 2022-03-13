@@ -1,20 +1,20 @@
 import { Option } from "./interfaces";
 
-export type DropdownField = {
+export type Dropdown = {
   id: number;
   kind: "dropdown";
   options: Option[];
   label: string;
   value: string;
 };
-export type TextField = {
+export type Text = {
   id: number;
   kind: "text";
   label: string;
   value: string;
 };
 
-export type RadioInputsField = {
+export type RadioInputs = {
   id: number;
   kind: "radio";
   options: Option[];
@@ -22,14 +22,14 @@ export type RadioInputsField = {
   value: string;
 };
 
-export type TextAreaField = {
+export type TextArea = {
   id: number;
-  kind: "text-area";
+  kind: "textarea";
   label: string;
   value: string;
 };
 
-export type MultiSelectField = {
+export type MultiSelect = {
   id: number;
   kind: "multiselect";
   options: Option[];
@@ -37,21 +37,21 @@ export type MultiSelectField = {
   value: string[];
 };
 
-export type EmailField = {
+export type Email = {
   id: number;
   kind: "email";
   label: string;
   value: string;
 };
 
-export type PhoneNumberField = {
+export type PhoneNumber = {
   id: number;
   kind: "phone-number";
   label: string;
   value: string;
 };
 
-export type DateField = {
+export type Date = {
   id: number;
   kind: "date";
   label: string;
@@ -59,20 +59,20 @@ export type DateField = {
 };
 
 export type FormField =
-  | DropdownField
-  | TextField
-  | RadioInputsField
-  | TextAreaField
-  | MultiSelectField
-  | EmailField
-  | PhoneNumberField
-  | DateField;
+  | Dropdown
+  | Text
+  | RadioInputs
+  | TextArea
+  | MultiSelect
+  | Email
+  | PhoneNumber
+  | Date;
 
 export const FIELD_TYPES = [
   "text",
   "dropdown",
   "radio",
-  "text-area",
+  "textarea",
   "multiselect",
   "email",
   "phone-number",
