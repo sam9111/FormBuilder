@@ -1,9 +1,11 @@
-export interface FormField {
-  id: number;
-  label: string;
-  type: string;
-  value: string;
-}
+// export interface FormField {
+//   id: number;
+//   label: string;
+//   type: string;
+//   value: string;
+// }
+
+import { FormField } from "./types";
 export interface FormData {
   id: number;
   title: string;
@@ -11,6 +13,11 @@ export interface FormData {
 }
 
 export interface Answer {
+  id: number;
+  value: string;
+}
+
+export interface Option {
   id: number;
   value: string;
 }

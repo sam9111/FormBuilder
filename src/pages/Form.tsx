@@ -1,16 +1,18 @@
 import { useEffect, useState, useRef } from "react";
 
-import LabelledInput from "../components/LabelledInput";
 import { Link } from "raviger";
-import { FormData } from "../types/interfaces";
-
+import { FormData, Option } from "../types/interfaces";
+import { FormField, FIELD_TYPES } from "../types/types";
 import { fetchForm, saveFormData } from "../utils/storageUtils";
-
+import TextFieldInput from "../components/TextFieldInput";
+import DropdownFieldInput from "../components/DropdownFieldInput";
 export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
+  const [newFieldType, setNewFieldType] = useState(FIELD_TYPES[0]);
   const titleRef = useRef<HTMLInputElement>(null);
 
+  console.log(state.formFields);
   useEffect(() => {
     document.title = "Form Edit";
     titleRef.current?.focus();
@@ -29,19 +31,35 @@ export default function Form(props: { formID: number }) {
   }, [state]);
 
   const addField = () => {
+    let newFormField: FormField = {
+      id: Number(new Date()),
+      label: newField,
+      kind: "text",
+      value: "",
+    };
+    switch (newFieldType) {
+      case "text":
+        newFormField = {
+          ...newFormField,
+          kind: "text",
+        };
+        break;
+      case "dropdown":
+        newFormField = {
+          ...newFormField,
+          kind: "dropdown",
+          options: [],
+        };
+        break;
+    }
+
     setState({
       ...state,
-      formFields: [
-        ...state.formFields,
-        {
-          id: Number(new Date()),
-          label: newField,
-          type: "text",
-          value: "",
-        },
-      ],
+      formFields: [...state.formFields, newFormField],
     });
+
     setNewField("");
+    setNewFieldType("text");
   };
 
   const editLabel = (id: number, value: string) => {
@@ -50,6 +68,21 @@ export default function Form(props: { formID: number }) {
       const newField = {
         ...field,
         label: value,
+      };
+      setState({
+        ...state,
+        formFields: state.formFields.map((field) =>
+          field.id === id ? newField : field
+        ),
+      });
+    }
+  };
+  const editOptions = (id: number, options: Option[]) => {
+    const field = state.formFields.find((field) => field.id === id);
+    if (field) {
+      const newField = {
+        ...field,
+        options: options,
       };
       setState({
         ...state,
@@ -79,12 +112,12 @@ export default function Form(props: { formID: number }) {
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
           <h2 className=" text-xl  font-bold">Edit Form</h2>
-          <Link
+          {/* <Link
             href={`/preview/${props.formID}`}
             className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
           >
             Preview
-          </Link>
+          </Link> */}
         </div>
 
         <span className="text-gray-500 text-sm py-4 font-semibold ">
@@ -101,19 +134,35 @@ export default function Form(props: { formID: number }) {
           ref={titleRef}
         />
       </div>
-      <div className="py-2">
+      <div className="flex flex-col gap-2 my-4 p-4">
         <h3 className=" text-lg  font-semibold my-4">Edit Fields</h3>
-        {state.formFields.map((field) => (
-          <LabelledInput
-            key={field.id}
-            id={field.id}
-            label={field.label}
-            fieldType={field.type}
-            value={field.label}
-            removeFieldCB={removeField}
-            editLabelCB={editLabel}
-          />
-        ))}
+        {state.formFields.map((field) => {
+          switch (field.kind) {
+            case "text":
+              return (
+                <TextFieldInput
+                  key={field.id}
+                  id={field.id}
+                  label={field.label}
+                  value={field.value}
+                  removeFieldCB={removeField}
+                  editLabelCB={editLabel}
+                />
+              );
+            case "dropdown":
+              return (
+                <DropdownFieldInput
+                  key={field.id}
+                  id={field.id}
+                  label={field.label}
+                  value={field.value}
+                  removeFieldCB={removeField}
+                  editLabelCB={editLabel}
+                  editOptionsCB={editOptions}
+                />
+              );
+          }
+        })}
       </div>
       <div className="flex gap-4 py-2">
         <input
@@ -124,6 +173,19 @@ export default function Form(props: { formID: number }) {
             setNewField(e.target.value);
           }}
         />
+
+        <select
+          value={newFieldType}
+          onChange={(e) => setNewFieldType(e.target.value)}
+          className="border-2 border-gray-200 p-2 rounded-lg  my-2 "
+        >
+          {FIELD_TYPES.map((kind, index) => (
+            <option className="" value={kind} key={index}>
+              {kind.toUpperCase()}
+            </option>
+          ))}
+        </select>
+
         <button
           onClick={() => {
             newField.length > 0 && addField();

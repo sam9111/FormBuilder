@@ -10,14 +10,6 @@ export default function Header() {
       >
         Home
       </ActiveLink>
-
-      <ActiveLink
-        href="/about"
-        className="text-gray-800 p-2 m-2 uppercase font-semibold"
-        activeClass="text-blue-600"
-      >
-        About
-      </ActiveLink>
     </div>
   );
 }
