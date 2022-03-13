@@ -1,15 +1,23 @@
-import logo from "../logo.svg";
+import { ActiveLink } from "raviger";
 
-export default function Header(props: { title: string }) {
+export default function Header() {
   return (
     <div className="flex gap-2 items-center">
-      <img
-        src={logo}
-        className="animate-spin h-16 w-16"
-        alt="logo"
-        style={{ animation: "spin 2s linear infinite" }}
-      />
-      <h1 className="text-center text-xl flex-1 font-bold">{props.title}</h1>
+      <ActiveLink
+        href="/"
+        className="text-gray-800 p-2 m-2 uppercase font-semibold"
+        exactActiveClass="text-blue-600"
+      >
+        Home
+      </ActiveLink>
+
+      <ActiveLink
+        href="/about"
+        className="text-gray-800 p-2 m-2 uppercase font-semibold"
+        activeClass="text-blue-600"
+      >
+        About
+      </ActiveLink>
     </div>
   );
 }

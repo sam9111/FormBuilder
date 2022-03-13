@@ -1,28 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 
 import LabelledInput from "./LabelledInput";
+import { Link } from "raviger";
+import { FormData } from "../types/interfaces";
 
-import { FormData } from "../interfaces";
+import { fetchForm, saveFormData } from "../utils/storageUtils";
 
-import { getLocalForms, saveLocalForms } from "../functions";
-
-const fetchForm: any = (id: number) => {
-  const localForms = getLocalForms();
-  return localForms.filter((form: FormData) => form.id === id).pop();
-};
-
-const saveFormData = (currentState: FormData) => {
-  const localForms = getLocalForms();
-  const updatedLocalForms = localForms.map((form: FormData) => {
-    return form.id === currentState.id ? currentState : form;
-  });
-  saveLocalForms(updatedLocalForms);
-};
-
-export default function Form(props: {
-  closeFormCB: () => void;
-  formID: number;
-}) {
+export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
   const titleRef = useRef<HTMLInputElement>(null);
@@ -49,18 +33,23 @@ export default function Form(props: {
       ...state,
       formFields: [
         ...state.formFields,
-        { id: Number(new Date()), label: newField, type: "text", value: "" },
+        {
+          id: Number(new Date()),
+          label: newField,
+          type: "text",
+          value: "",
+        },
       ],
     });
     setNewField("");
   };
 
-  const addValue = (id: number, value: string) => {
+  const editLabel = (id: number, value: string) => {
     const field = state.formFields.find((field) => field.id === id);
     if (field) {
       const newField = {
         ...field,
-        value: value,
+        label: value,
       };
       setState({
         ...state,
@@ -81,16 +70,27 @@ export default function Form(props: {
   const clearForm = () => {
     setState({
       ...state,
-      formFields: state.formFields.map((field) => ({ ...field, value: "" })),
+      formFields: state.formFields.map((field) => ({ ...field, label: "" })),
     });
   };
 
   return (
-    <div className="flex flex-col gap-2 p-4 divide-y-4 divide-dotted my-4">
+    <div className="flex flex-col gap-4 p-4 divide-y-4 divide-dotted my-4">
       <div className="flex flex-col">
-        <h2 className=" text-xl flex-1 font-bold">Edit Form</h2>
-        <span className="text-gray-500 text-sm py-4 ">ID: {props.formID}</span>
-        <label className="font-medium">Title</label>
+        <div className="flex justify-between items-center">
+          <h2 className=" text-xl  font-bold">Edit Form</h2>
+          <Link
+            href={`/preview/${props.formID}`}
+            className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          >
+            Preview
+          </Link>
+        </div>
+
+        <span className="text-gray-500 text-sm py-4 font-semibold ">
+          ID: {props.formID}
+        </span>
+        <label className="font-semibold text-lg">Title</label>
         <input
           type="text"
           className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
@@ -102,15 +102,16 @@ export default function Form(props: {
         />
       </div>
       <div className="py-2">
+        <h3 className=" text-lg  font-semibold my-4">Edit Fields</h3>
         {state.formFields.map((field) => (
           <LabelledInput
             key={field.id}
             id={field.id}
             label={field.label}
             fieldType={field.type}
-            value={field.value}
+            value={field.label}
             removeFieldCB={removeField}
-            addValueCB={addValue}
+            editLabelCB={editLabel}
           />
         ))}
       </div>
@@ -145,12 +146,12 @@ export default function Form(props: {
         >
           Clear Form
         </button>
-        <button
-          onClick={props.closeFormCB}
+        <Link
+          href={`/`}
           className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Close Form
-        </button>
+        </Link>
       </div>
     </div>
   );
