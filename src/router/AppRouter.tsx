@@ -2,7 +2,7 @@ import { useRoutes } from "raviger";
 import AppContainer from "../AppContainer";
 import Form from "../pages/Form";
 import FormList from "../pages/FormList";
-// import Preview from "../pages/Preview";
+import Preview from "../pages/Preview";
 const routes = {
   "/": () => (
     <AppContainer>
@@ -14,9 +14,9 @@ const routes = {
       <Form formID={Number(id)} />
     </AppContainer>
   ),
-  // "/preview/:formID": ({ formID }: { formID: string }) => (
-  //   <Preview formID={Number(formID)} />
-  // ),
+  "/preview/:formID": ({ formID }: { formID: string }) => (
+    <Preview formID={Number(formID)} />
+  ),
 };
 
 export default function AppRouter() {

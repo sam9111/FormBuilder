@@ -127,12 +127,12 @@ export default function Form(props: { formID: number }) {
       <div className="flex flex-col">
         <div className="flex justify-between items-center">
           <h2 className=" text-xl  font-bold">Edit Form</h2>
-          {/* <Link
+          <Link
             href={`/preview/${props.formID}`}
             className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
           >
             Preview
-          </Link> */}
+          </Link>
         </div>
 
         <span className="text-gray-500 text-sm py-4 font-semibold ">
@@ -157,11 +157,10 @@ export default function Form(props: { formID: number }) {
               return (
                 <TextField
                   key={field.id}
-                  id={field.id}
-                  label={field.label}
-                  value={field.value}
+                  field={field}
                   removeFieldCB={removeField}
                   editLabelCB={editLabel}
+                  preview={false}
                 />
               );
 
@@ -169,11 +168,10 @@ export default function Form(props: { formID: number }) {
               return (
                 <DropdownField
                   key={field.id}
-                  id={field.id}
-                  label={field.label}
-                  value={field.value}
+                  field={field}
                   removeFieldCB={removeField}
                   editLabelCB={editLabel}
+                  preview={false}
                   editOptionsCB={editOptions}
                 />
               );
@@ -181,11 +179,10 @@ export default function Form(props: { formID: number }) {
               return (
                 <RadioInputsField
                   key={field.id}
-                  id={field.id}
-                  label={field.label}
-                  value={field.value}
+                  field={field}
                   removeFieldCB={removeField}
                   editLabelCB={editLabel}
+                  preview={false}
                   editOptionsCB={editOptions}
                 />
               );
@@ -193,11 +190,10 @@ export default function Form(props: { formID: number }) {
               return (
                 <TextAreaField
                   key={field.id}
-                  id={field.id}
-                  label={field.label}
-                  value={field.value}
+                  field={field}
                   removeFieldCB={removeField}
                   editLabelCB={editLabel}
+                  preview={false}
                 />
               );
           }

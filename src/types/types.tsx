@@ -37,36 +37,32 @@ export type MultiSelect = {
   value: string[];
 };
 
-export type Email = {
-  id: number;
-  kind: "email";
-  label: string;
-  value: string;
-};
+// export type Email = {
+//   id: number;
+//   kind: "email";
+//   label: string;
+//   value: string;
+// };
 
-export type PhoneNumber = {
-  id: number;
-  kind: "phone-number";
-  label: string;
-  value: string;
-};
+// export type PhoneNumber = {
+//   id: number;
+//   kind: "phone-number";
+//   label: string;
+//   value: string;
+// };
 
-export type Date = {
-  id: number;
-  kind: "date";
-  label: string;
-  value: string;
-};
+// export type Date = {
+//   id: number;
+//   kind: "date";
+//   label: string;
+//   value: string;
+// };
 
-export type FormField =
-  | Dropdown
-  | Text
-  | RadioInputs
-  | TextArea
-  | MultiSelect
-  | Email
-  | PhoneNumber
-  | Date;
+export type FormField = Dropdown | Text | RadioInputs | TextArea;
+// | MultiSelect
+// | Email
+// | PhoneNumber
+// | Date;
 
 export const FIELD_TYPES = [
   "text",
