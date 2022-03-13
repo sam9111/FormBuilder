@@ -1,6 +1,6 @@
-import { FormField, Text } from "../types/types";
+import { FormField, Text, Date, PhoneNumber, Email } from "../types/custom";
 export default function TextField(props: {
-  field: Text;
+  field: Text | Date | PhoneNumber | Email;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
@@ -24,9 +24,10 @@ export default function TextField(props: {
         </div>
       ) : (
         <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-          <label>Text</label>
+          <label>{props.field.kind.toUpperCase()}</label>
           <div className="flex gap-2 w-full">
             <input
+              type={props.field.kind}
               value={props.field.label}
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               onChange={(e) => {

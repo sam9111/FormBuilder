@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, navigate } from "raviger";
 import { FormData } from "../types/interfaces";
-
+import { FormField } from "../types/custom";
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 
 import { useQueryParams } from "raviger";
-// const initialFormFields: FormField[] = [
-//   { id: 1, label: "First Name", type: "text", value: "" },
-//   { id: 2, label: "Last Name", type: "text", value: "" },
-//   { id: 3, label: "Email", type: "email", value: "" },
-//   { id: 4, label: "Phone Number", type: "tel", value: "" },
-//   { id: 5, label: "Date of Birth", type: "date", value: "" },
-// ];
+const initialFormFields: FormField[] = [
+  { id: 1, label: "First Name", kind: "text", value: "" },
+  { id: 2, label: "Last Name", kind: "text", value: "" },
+  { id: 3, label: "Email", kind: "email", value: "" },
+  { id: 4, label: "Phone Number", kind: "tel", value: "" },
+  { id: 5, label: "Date of Birth", kind: "date", value: "" },
+];
 
 export default function FormList() {
   const [state, setState] = useState<FormData[]>(() => getLocalForms());
@@ -23,7 +23,7 @@ export default function FormList() {
     const newForm = {
       id: Number(new Date()),
       title: "Untitled Form",
-      formFields: [],
+      formFields: initialFormFields,
     };
     saveLocalForms([...localForms, newForm]);
     navigate(`/form/${newForm.id}`);

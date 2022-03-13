@@ -5,7 +5,7 @@
 //   value: string;
 // }
 
-import { FormField } from "./types";
+import { FormField } from "./custom";
 export interface FormData {
   id: number;
   title: string;

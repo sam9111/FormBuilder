@@ -2,12 +2,13 @@ import { useEffect, useState, useRef } from "react";
 
 import { Link } from "raviger";
 import { FormData, Option } from "../types/interfaces";
-import { FormField, FIELD_TYPES } from "../types/types";
+import { FormField, FIELD_TYPES } from "../types/custom";
 import { fetchForm, saveFormData } from "../utils/storageUtils";
 import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
+import MultiSelectField from "../components/MultiSelectField";
 export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
@@ -15,6 +16,7 @@ export default function Form(props: { formID: number }) {
   const titleRef = useRef<HTMLInputElement>(null);
 
   console.log(state.formFields);
+
   useEffect(() => {
     document.title = "Form Edit";
     titleRef.current?.focus();
@@ -40,10 +42,22 @@ export default function Form(props: { formID: number }) {
       value: "",
     };
     switch (newFieldType) {
-      case "text":
+      case "email":
         newFormField = {
           ...newFormField,
-          kind: "text",
+          kind: "email",
+        };
+        break;
+      case "tel":
+        newFormField = {
+          ...newFormField,
+          kind: "tel",
+        };
+        break;
+      case "date":
+        newFormField = {
+          ...newFormField,
+          kind: "date",
         };
         break;
       case "dropdown":
@@ -64,6 +78,14 @@ export default function Form(props: { formID: number }) {
         newFormField = {
           ...newFormField,
           kind: "textarea",
+        };
+        break;
+      case "multiselect":
+        newFormField = {
+          ...newFormField,
+          kind: "multiselect",
+          options: [],
+          value: [],
         };
         break;
     }
@@ -153,17 +175,6 @@ export default function Form(props: { formID: number }) {
         <h3 className=" text-lg  font-semibold my-4">Edit Fields</h3>
         {state.formFields.map((field) => {
           switch (field.kind) {
-            case "text":
-              return (
-                <TextField
-                  key={field.id}
-                  field={field}
-                  removeFieldCB={removeField}
-                  editLabelCB={editLabel}
-                  preview={false}
-                />
-              );
-
             case "dropdown":
               return (
                 <DropdownField
@@ -189,6 +200,29 @@ export default function Form(props: { formID: number }) {
             case "textarea":
               return (
                 <TextAreaField
+                  key={field.id}
+                  field={field}
+                  removeFieldCB={removeField}
+                  editLabelCB={editLabel}
+                  preview={false}
+                />
+              );
+
+            case "multiselect":
+              return (
+                <MultiSelectField
+                  key={field.id}
+                  field={field}
+                  removeFieldCB={removeField}
+                  editLabelCB={editLabel}
+                  preview={false}
+                  editOptionsCB={editOptions}
+                />
+              );
+
+            default:
+              return (
+                <TextField
                   key={field.id}
                   field={field}
                   removeFieldCB={removeField}

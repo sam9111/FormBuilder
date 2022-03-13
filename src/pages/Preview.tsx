@@ -3,11 +3,12 @@ import { FormData } from "../types/interfaces";
 
 import { fetchForm } from "../utils/storageUtils";
 import { Answer } from "../types/interfaces";
-import { FormField } from "../types/types";
+import { FormField } from "../types/custom";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import TextField from "../components/TextField";
+import MultiSelectField from "../components/MultiSelectField";
 const initialAnswers: (form: FormData) => Answer[] = (form) => {
   return form.formFields.map((field) => {
     return { id: field.id, value: "" };
@@ -18,7 +19,7 @@ export default function Preview(props: { formID: number }) {
   const [fieldState, setFieldState] = useState<FormField>(form.formFields[0]);
   const [answers, setAnswers] = useState(() => initialAnswers(form));
   const [showAnswers, setShowAnswers] = useState(false);
-  const addValue = (id: number, value: string) => {
+  const addValue = (id: number, value: any) => {
     const field = form.formFields.find((field) => field.id === id);
     if (field) {
       const newField = {
@@ -44,16 +45,6 @@ export default function Preview(props: { formID: number }) {
 
   function FieldPreview(fieldState: FormField) {
     switch (fieldState.kind) {
-      case "text":
-        return (
-          <TextField
-            key={fieldState.id}
-            field={fieldState}
-            preview={true}
-            addValueCB={addValue}
-          />
-        );
-
       case "dropdown":
         return (
           <DropdownField
@@ -75,6 +66,24 @@ export default function Preview(props: { formID: number }) {
       case "textarea":
         return (
           <TextAreaField
+            key={fieldState.id}
+            field={fieldState}
+            preview={true}
+            addValueCB={addValue}
+          />
+        );
+      case "multiselect":
+        return (
+          <MultiSelectField
+            key={fieldState.id}
+            field={fieldState}
+            preview={true}
+            addValueCB={addValue}
+          />
+        );
+      default:
+        return (
+          <TextField
             key={fieldState.id}
             field={fieldState}
             preview={true}
@@ -153,7 +162,7 @@ export default function Preview(props: { formID: number }) {
           {answers.map((answer) => {
             return (
               answer.value && (
-                <div className="flex  gap-4 py-2 items-center" key={answer.id}>
+                <div className="flex  gap-4 py-2 items-center " key={answer.id}>
                   <p className="text-md font-semibold text-gray-500">
                     {
                       form.formFields.find((field) => field.id === answer.id)
@@ -161,7 +170,17 @@ export default function Preview(props: { formID: number }) {
                     }
                     :
                   </p>
-                  <p>{answer.value}</p>
+                  {Array.isArray(answer.value) ? (
+                    <ul className="flex flex-row gap-2">
+                      {answer.value.map((value) => (
+                        <li key={value} className="bg-gray-100 rounded-lg p-1">
+                          {value}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>{answer.value}</p>
+                  )}
                 </div>
               )
             );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Option } from "../types/interfaces";
-import { FormField, Dropdown } from "../types/types";
+import { FormField, Dropdown } from "../types/custom";
 export default function DropdownField(props: {
   field: Dropdown;
   removeFieldCB?: (id: number) => void;
@@ -56,7 +56,7 @@ export default function DropdownField(props: {
         </div>
       ) : (
         <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-          <label>Dropdown</label>
+          <label>DROPDOWN</label>
           <div className="flex gap-2 w-full">
             <input
               value={props.field.label}

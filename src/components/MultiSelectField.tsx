@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { Option } from "../types/interfaces";
-import { RadioInputs } from "../types/custom";
-export default function RadioInputsField(props: {
-  field: RadioInputs;
+import { FormField, MultiSelect } from "../types/custom";
+export default function MultiSelectField(props: {
+  field: MultiSelect;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: string) => void;
+  addValueCB?: (id: number, value: any) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -35,25 +35,32 @@ export default function RadioInputsField(props: {
       {props.preview ? (
         <div className="flex flex-col mx-auto  gap-4">
           <label className="text-lg  font-semibold ">{props.field.label}</label>
-
-          {props.field.options.map((option, index) => (
-            <label className="text-lg  font-semibold " key={index}>
-              <input
-                type="radio"
-                checked={props.field.value === option.value}
-                value={option.value}
-                onChange={(e) => {
-                  props.addValueCB &&
-                    props.addValueCB(props.field.id, e.target.value);
-                }}
-              />
-              {option.value.toUpperCase()}
-            </label>
-          ))}
+          <select
+            multiple={true}
+            value={props.field.value}
+            onChange={(e) => {
+              e.preventDefault();
+              props.addValueCB &&
+                props.addValueCB(
+                  props.field.id,
+                  Array.from(e.target.selectedOptions, (item) => item.value)
+                );
+            }}
+            className="border-2 border-gray-200 p-2 rounded-lg  my-2 bg-white"
+          >
+            <option value="" disabled>
+              Select your option
+            </option>
+            {props.field.options.map((option, index) => (
+              <option className="" value={option.value} key={index}>
+                {option.value.toUpperCase()}
+              </option>
+            ))}
+          </select>
         </div>
       ) : (
         <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-          <label>RADIO INPUTS</label>
+          <label>Dropdown</label>
           <div className="flex gap-2 w-full">
             <input
               value={props.field.label}

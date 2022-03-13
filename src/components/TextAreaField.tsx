@@ -1,4 +1,4 @@
-import { TextArea } from "../types/types";
+import { TextArea } from "../types/custom";
 export default function TextAreaField(props: {
   field: TextArea;
   removeFieldCB?: (id: number) => void;
@@ -23,7 +23,7 @@ export default function TextAreaField(props: {
         </div>
       ) : (
         <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-          <label>Text Area</label>
+          <label>TEXT AREA</label>
           <div className="flex gap-2 w-full">
             <input
               value={props.field.label}
