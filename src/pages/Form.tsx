@@ -12,8 +12,45 @@ import MultiSelectField from "../components/MultiSelectField";
 export default function Form(props: { formID: number }) {
   const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
-  const [newFieldType, setNewFieldType] = useState(FIELD_TYPES[0]);
+  const [newFieldKind, setNewFieldKind] = useState(FIELD_TYPES[0]);
   const titleRef = useRef<HTMLInputElement>(null);
+
+  type FormAction = AddAction | RemoveAction;
+
+  type RemoveAction = {
+    type: "removeField";
+    id: number;
+  };
+
+  type AddAction = {
+    type: "addField";
+    label: string;
+    kind: string;
+  };
+
+  const reducer = (state: FormData, action: FormAction) => {
+    switch (action.type) {
+      case "addField":
+        const newField = getNewField(action.label, action.kind);
+        setNewField("");
+        setNewFieldKind("text");
+        return {
+          ...state,
+          formFields: [...state.formFields, newField],
+        };
+      case "removeField":
+        return {
+          ...state,
+          formFields: state.formFields.filter(
+            (field) => field.id !== action.id
+          ),
+        };
+    }
+  };
+
+  const dispatchAction = (action: FormAction) => {
+    setState((state) => reducer(state, action));
+  };
 
   useEffect(() => {
     document.title = "Form Edit";
@@ -32,14 +69,14 @@ export default function Form(props: { formID: number }) {
     };
   }, [state]);
 
-  const addField = () => {
+  const getNewField = (label: string, kind: string) => {
     let newFormField: FormField = {
       id: Number(new Date()),
-      label: newField,
+      label: label,
       kind: "text",
       value: "",
     };
-    switch (newFieldType) {
+    switch (kind) {
       case "email":
         newFormField = {
           ...newFormField,
@@ -88,13 +125,7 @@ export default function Form(props: { formID: number }) {
         break;
     }
 
-    setState({
-      ...state,
-      formFields: [...state.formFields, newFormField],
-    });
-
-    setNewField("");
-    setNewFieldType("text");
+    return newFormField;
   };
 
   const editLabel = (id: number, value: string) => {
@@ -126,13 +157,6 @@ export default function Form(props: { formID: number }) {
         ),
       });
     }
-  };
-
-  const removeField = (id: number) => {
-    setState({
-      ...state,
-      formFields: state.formFields.filter((field) => field.id !== id),
-    });
   };
 
   const clearForm = () => {
@@ -178,7 +202,9 @@ export default function Form(props: { formID: number }) {
                 <DropdownField
                   key={field.id}
                   field={field}
-                  removeFieldCB={removeField}
+                  removeFieldCB={(id) =>
+                    dispatchAction({ type: "removeField", id: id })
+                  }
                   editLabelCB={editLabel}
                   preview={false}
                   editOptionsCB={editOptions}
@@ -189,7 +215,9 @@ export default function Form(props: { formID: number }) {
                 <RadioInputsField
                   key={field.id}
                   field={field}
-                  removeFieldCB={removeField}
+                  removeFieldCB={(id) =>
+                    dispatchAction({ type: "removeField", id: id })
+                  }
                   editLabelCB={editLabel}
                   preview={false}
                   editOptionsCB={editOptions}
@@ -200,7 +228,9 @@ export default function Form(props: { formID: number }) {
                 <TextAreaField
                   key={field.id}
                   field={field}
-                  removeFieldCB={removeField}
+                  removeFieldCB={(id) =>
+                    dispatchAction({ type: "removeField", id: id })
+                  }
                   editLabelCB={editLabel}
                   preview={false}
                 />
@@ -211,7 +241,9 @@ export default function Form(props: { formID: number }) {
                 <MultiSelectField
                   key={field.id}
                   field={field}
-                  removeFieldCB={removeField}
+                  removeFieldCB={(id) =>
+                    dispatchAction({ type: "removeField", id: id })
+                  }
                   editLabelCB={editLabel}
                   preview={false}
                   editOptionsCB={editOptions}
@@ -223,7 +255,9 @@ export default function Form(props: { formID: number }) {
                 <TextField
                   key={field.id}
                   field={field}
-                  removeFieldCB={removeField}
+                  removeFieldCB={(id) =>
+                    dispatchAction({ type: "removeField", id: id })
+                  }
                   editLabelCB={editLabel}
                   preview={false}
                 />
@@ -242,8 +276,8 @@ export default function Form(props: { formID: number }) {
         />
 
         <select
-          value={newFieldType}
-          onChange={(e) => setNewFieldType(e.target.value)}
+          value={newFieldKind}
+          onChange={(e) => setNewFieldKind(e.target.value)}
           className="border-2 border-gray-200 p-2 rounded-lg  my-2 "
         >
           {FIELD_TYPES.map((kind, index) => (
@@ -255,7 +289,12 @@ export default function Form(props: { formID: number }) {
 
         <button
           onClick={() => {
-            newField.length > 0 && addField();
+            newField.length > 0 &&
+              dispatchAction({
+                type: "addField",
+                label: newField,
+                kind: newFieldKind,
+              });
           }}
           className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
