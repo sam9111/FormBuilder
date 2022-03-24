@@ -60,7 +60,7 @@ export default function MultiSelectField(props: {
         </div>
       ) : (
         <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-          <label>Dropdown</label>
+          <label>MULTI-SELECT</label>
           <div className="flex gap-2 w-full">
             <input
               value={props.field.label}

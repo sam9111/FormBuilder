@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useReducer } from "react";
 
 import { Link } from "raviger";
 import { FormData, Option } from "../types/interfaces";
@@ -9,65 +9,50 @@ import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import MultiSelectField from "../components/MultiSelectField";
+type FormAction =
+  | AddAction
+  | RemoveAction
+  | UpdateTitleAction
+  | UpdateAction
+  | UpdateOptionsAction
+  | ClearFormAction;
+
+type RemoveAction = {
+  type: "removeField";
+  id: number;
+};
+
+type AddAction = {
+  type: "addField";
+  label: string;
+  kind: string;
+};
+
+type UpdateTitleAction = {
+  type: "updateTitle";
+  title: string;
+};
+
+type UpdateAction = {
+  type: "updateLabel";
+  id: number;
+  label: string;
+};
+
+type UpdateOptionsAction = {
+  type: "updateOptions";
+  id: number;
+  options: Option[];
+};
+
+type ClearFormAction = {
+  type: "clearForm";
+};
+
 export default function Form(props: { formID: number }) {
-  const [state, setState] = useState<FormData>(() => fetchForm(props.formID));
   const [newField, setNewField] = useState("");
   const [newFieldKind, setNewFieldKind] = useState(FIELD_TYPES[0]);
   const titleRef = useRef<HTMLInputElement>(null);
-
-  type FormAction = AddAction | RemoveAction;
-
-  type RemoveAction = {
-    type: "removeField";
-    id: number;
-  };
-
-  type AddAction = {
-    type: "addField";
-    label: string;
-    kind: string;
-  };
-
-  const reducer = (state: FormData, action: FormAction) => {
-    switch (action.type) {
-      case "addField":
-        const newField = getNewField(action.label, action.kind);
-        setNewField("");
-        setNewFieldKind("text");
-        return {
-          ...state,
-          formFields: [...state.formFields, newField],
-        };
-      case "removeField":
-        return {
-          ...state,
-          formFields: state.formFields.filter(
-            (field) => field.id !== action.id
-          ),
-        };
-    }
-  };
-
-  const dispatchAction = (action: FormAction) => {
-    setState((state) => reducer(state, action));
-  };
-
-  useEffect(() => {
-    document.title = "Form Edit";
-    titleRef.current?.focus();
-    return () => {
-      document.title = "React Form";
-    };
-  }, []);
-
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      saveFormData(state);
-    }, 100);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [state]);
 
   const getNewField = (label: string, kind: string) => {
     let newFormField: FormField = {
@@ -128,43 +113,86 @@ export default function Form(props: { formID: number }) {
     return newFormField;
   };
 
-  const editLabel = (id: number, value: string) => {
-    const field = state.formFields.find((field) => field.id === id);
-    if (field) {
-      const newField = {
-        ...field,
-        label: value,
-      };
-      setState({
-        ...state,
-        formFields: state.formFields.map((field) =>
-          field.id === id ? newField : field
-        ),
-      });
-    }
-  };
-  const editOptions = (id: number, options: Option[]) => {
-    const field = state.formFields.find((field) => field.id === id);
-    if (field) {
-      const newField = {
-        ...field,
-        options: options,
-      };
-      setState({
-        ...state,
-        formFields: state.formFields.map((field) =>
-          field.id === id ? newField : field
-        ),
-      });
+  const reducer = (state: FormData, action: FormAction) => {
+    switch (action.type) {
+      case "addField":
+        const newField = getNewField(action.label, action.kind);
+        setNewField("");
+        setNewFieldKind("text");
+        return {
+          ...state,
+          formFields: [...state.formFields, newField],
+        };
+      case "removeField":
+        return {
+          ...state,
+          formFields: state.formFields.filter(
+            (field) => field.id !== action.id
+          ),
+        };
+
+      case "updateTitle":
+        return {
+          ...state,
+          title: action.title,
+        };
+      case "updateLabel":
+        return {
+          ...state,
+          formFields: state.formFields.map((field) => {
+            if (field.id === action.id) {
+              return {
+                ...field,
+                label: action.label,
+              };
+            }
+            return field;
+          }),
+        };
+
+      case "updateOptions":
+        return {
+          ...state,
+          formFields: state.formFields.map((field) => {
+            if (field.id === action.id) {
+              return {
+                ...field,
+                options: action.options,
+              };
+            }
+            return field;
+          }),
+        };
+      case "clearForm":
+        return {
+          ...state,
+          formFields: state.formFields.map((field) => ({
+            ...field,
+            label: "",
+          })),
+        };
     }
   };
 
-  const clearForm = () => {
-    setState({
-      ...state,
-      formFields: state.formFields.map((field) => ({ ...field, label: "" })),
-    });
-  };
+  const [state, dispatch] = useReducer(reducer, null, () =>
+    fetchForm(props.formID)
+  );
+  useEffect(() => {
+    document.title = "Form Edit";
+    titleRef.current?.focus();
+    return () => {
+      document.title = "React Form";
+    };
+  }, []);
+
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      saveFormData(state);
+    }, 100);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [state]);
 
   return (
     <div className="flex flex-col gap-4 p-4 divide-y-4 divide-dotted my-4">
@@ -188,7 +216,7 @@ export default function Form(props: { formID: number }) {
           className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
           value={state.title}
           onChange={(e) => {
-            setState({ ...state, title: e.target.value });
+            dispatch({ type: "updateTitle", title: e.target.value });
           }}
           ref={titleRef}
         />
@@ -203,11 +231,19 @@ export default function Form(props: { formID: number }) {
                   key={field.id}
                   field={field}
                   removeFieldCB={(id) =>
-                    dispatchAction({ type: "removeField", id: id })
+                    dispatch({ type: "removeField", id: id })
                   }
-                  editLabelCB={editLabel}
+                  editLabelCB={(id, value) =>
+                    dispatch({ type: "updateLabel", label: value, id: id })
+                  }
                   preview={false}
-                  editOptionsCB={editOptions}
+                  editOptionsCB={(id, options) =>
+                    dispatch({
+                      type: "updateOptions",
+                      id: id,
+                      options: options,
+                    })
+                  }
                 />
               );
             case "radio":
@@ -216,11 +252,19 @@ export default function Form(props: { formID: number }) {
                   key={field.id}
                   field={field}
                   removeFieldCB={(id) =>
-                    dispatchAction({ type: "removeField", id: id })
+                    dispatch({ type: "removeField", id: id })
                   }
-                  editLabelCB={editLabel}
+                  editLabelCB={(id, value) =>
+                    dispatch({ type: "updateLabel", label: value, id: id })
+                  }
                   preview={false}
-                  editOptionsCB={editOptions}
+                  editOptionsCB={(id, options) =>
+                    dispatch({
+                      type: "updateOptions",
+                      id: id,
+                      options: options,
+                    })
+                  }
                 />
               );
             case "textarea":
@@ -229,9 +273,11 @@ export default function Form(props: { formID: number }) {
                   key={field.id}
                   field={field}
                   removeFieldCB={(id) =>
-                    dispatchAction({ type: "removeField", id: id })
+                    dispatch({ type: "removeField", id: id })
                   }
-                  editLabelCB={editLabel}
+                  editLabelCB={(id, value) =>
+                    dispatch({ type: "updateLabel", label: value, id: id })
+                  }
                   preview={false}
                 />
               );
@@ -242,11 +288,19 @@ export default function Form(props: { formID: number }) {
                   key={field.id}
                   field={field}
                   removeFieldCB={(id) =>
-                    dispatchAction({ type: "removeField", id: id })
+                    dispatch({ type: "removeField", id: id })
                   }
-                  editLabelCB={editLabel}
+                  editLabelCB={(id, value) =>
+                    dispatch({ type: "updateLabel", label: value, id: id })
+                  }
                   preview={false}
-                  editOptionsCB={editOptions}
+                  editOptionsCB={(id, options) =>
+                    dispatch({
+                      type: "updateOptions",
+                      id: id,
+                      options: options,
+                    })
+                  }
                 />
               );
 
@@ -256,9 +310,11 @@ export default function Form(props: { formID: number }) {
                   key={field.id}
                   field={field}
                   removeFieldCB={(id) =>
-                    dispatchAction({ type: "removeField", id: id })
+                    dispatch({ type: "removeField", id: id })
                   }
-                  editLabelCB={editLabel}
+                  editLabelCB={(id, value) =>
+                    dispatch({ type: "updateLabel", label: value, id: id })
+                  }
                   preview={false}
                 />
               );
@@ -290,7 +346,7 @@ export default function Form(props: { formID: number }) {
         <button
           onClick={() => {
             newField.length > 0 &&
-              dispatchAction({
+              dispatch({
                 type: "addField",
                 label: newField,
                 kind: newFieldKind,
@@ -309,7 +365,7 @@ export default function Form(props: { formID: number }) {
           Submit
         </button>
         <button
-          onClick={clearForm}
+          onClick={() => dispatch({ type: "clearForm" })}
           className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Clear Form
