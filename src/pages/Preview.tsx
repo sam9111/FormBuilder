@@ -15,7 +15,7 @@ const initialAnswers: (form: FormData) => Answer[] = (form) => {
   });
 };
 
-type AnswerAction = SetAnswer;
+type AnswerAction = SetAnswer | ClearAnswer;
 
 type SetAnswer = {
   type: "setAnswer";
@@ -23,9 +23,14 @@ type SetAnswer = {
   value: string;
 };
 
+type ClearAnswer = {
+  type: "clearAnswer";
+};
+
 export default function Preview(props: { formID: number }) {
   const [form, setForm] = useState<FormData>(() => fetchForm(props.formID));
-  const [fieldState, setFieldState] = useState<FormField>(form.formFields[0]);
+
+  const [currIndex, setIndex] = useState(0);
 
   const [showAnswers, setShowAnswers] = useState(false);
 
@@ -35,6 +40,10 @@ export default function Preview(props: { formID: number }) {
         return answers.map((answer: Answer) =>
           answer.id === action.id ? { ...answer, value: action.value } : answer
         );
+      case "clearAnswer":
+        return answers.map((answer: Answer) => {
+          return { ...answer, value: "" };
+        });
       default:
         return answers;
     }
@@ -44,7 +53,8 @@ export default function Preview(props: { formID: number }) {
     initialAnswers(form)
   );
 
-  function FieldPreview(fieldState: FormField) {
+  function FieldPreview() {
+    const fieldState = form.formFields[currIndex];
     switch (fieldState.kind) {
       case "dropdown":
         return (
@@ -123,11 +133,17 @@ export default function Preview(props: { formID: number }) {
   return (
     <div className=" rounded-lg bg-gray-100 px-8 py-2 m-8 justify-between items-center my-4 p-4 ">
       {form.formFields.length > 0 ? (
-        <div className="  ">
-          <div className="flex justify-between items-center">
+        <div className="">
+          <div className="flex justify-between items-center gap-2">
             <h2 className="text-center text-xl font-bold mx-auto p-8">
               {form.title}
             </h2>
+            <button
+              onClick={() => dispatch({ type: "clearAnswer" })}
+              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            >
+              Reset
+            </button>
             {showAnswers ? (
               <button
                 onClick={() => setShowAnswers(false)}
@@ -144,39 +160,32 @@ export default function Preview(props: { formID: number }) {
               </button>
             )}
           </div>
-
-          {FieldPreview(fieldState)}
+          <p>{currIndex + 1}.</p>
+          {FieldPreview()}
           <div className="flex gap-2 my-4">
-            <button
-              onClick={() => {
-                const currIndex = form.formFields.findIndex(
-                  (field) => field.id === fieldState.id
-                );
-                setFieldState(
-                  form.formFields[currIndex - 1]
-                    ? form.formFields[currIndex - 1]
-                    : form.formFields[0]
-                );
-              }}
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-            >
-              Previous
-            </button>
-            <button
-              onClick={() => {
-                const currIndex = form.formFields.findIndex(
-                  (field) => field.id === fieldState.id
-                );
-                setFieldState(
-                  form.formFields[currIndex + 1]
-                    ? form.formFields[currIndex + 1]
-                    : form.formFields[currIndex]
-                );
-              }}
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-            >
-              Next
-            </button>
+            {currIndex !== 0 && (
+              <button
+                onClick={() => {
+                  setIndex(form.formFields[currIndex - 1] ? currIndex - 1 : 0);
+                }}
+                className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+              >
+                Previous
+              </button>
+            )}
+
+            {currIndex !== form.formFields.length - 1 && (
+              <button
+                onClick={() => {
+                  setIndex(
+                    form.formFields[currIndex + 1] ? currIndex + 1 : currIndex
+                  );
+                }}
+                className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+              >
+                Next
+              </button>
+            )}
           </div>
         </div>
       ) : (
@@ -187,11 +196,12 @@ export default function Preview(props: { formID: number }) {
       {showAnswers && (
         <div className="flex flex-col bg-white p-4 my-4 rounded-lg ">
           <h2 className=" text-lg font-semibold py-4 ">Answers</h2>
-          {answers.map((answer) => {
+          {answers.map((answer, index) => {
             return (
               answer.value && (
                 <div className="flex  gap-4 py-2 items-center " key={answer.id}>
                   <p className="text-md font-semibold text-gray-500">
+                    {index + 1}.
                     {
                       form.formFields.find((field) => field.id === answer.id)
                         ?.label
