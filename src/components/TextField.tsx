@@ -1,5 +1,6 @@
 import { Text, Date, PhoneNumber, Email } from "../types/custom";
 export default function TextField(props: {
+  answer?: string;
   field: Text | Date | PhoneNumber | Email;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
@@ -13,7 +14,7 @@ export default function TextField(props: {
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <input
             type={props.field.kind}
-            value={props.field.value}
+            value={props.answer}
             className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
             onChange={(e) => {
               e.preventDefault();

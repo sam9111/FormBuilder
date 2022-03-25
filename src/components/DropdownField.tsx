@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { Dropdown } from "../types/custom";
 export default function DropdownField(props: {
+  answer?: string;
   field: Dropdown;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
@@ -36,7 +37,7 @@ export default function DropdownField(props: {
         <div className="flex flex-col mx-auto  gap-4">
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <select
-            value={props.field.value}
+            value={props.answer}
             onChange={(e) => {
               e.preventDefault();
               props.addValueCB &&

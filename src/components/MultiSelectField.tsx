@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { MultiSelect } from "../types/custom";
 export default function MultiSelectField(props: {
+  answer?: any;
   field: MultiSelect;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
@@ -37,7 +38,7 @@ export default function MultiSelectField(props: {
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <select
             multiple={true}
-            value={props.field.value}
+            value={props.answer}
             onChange={(e) => {
               e.preventDefault();
               props.addValueCB &&

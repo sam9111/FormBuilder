@@ -1,5 +1,6 @@
 import { TextArea } from "../types/custom";
 export default function TextAreaField(props: {
+  answer?: string;
   field: TextArea;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
@@ -18,7 +19,7 @@ export default function TextAreaField(props: {
               props.addValueCB &&
                 props.addValueCB(props.field.id, e.target.value);
             }}
-            value={props.field.value}
+            value={props.answer}
           />
         </div>
       ) : (

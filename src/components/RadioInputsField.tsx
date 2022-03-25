@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { RadioInputs } from "../types/custom";
 export default function RadioInputsField(props: {
+  answer?: string;
   field: RadioInputs;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
@@ -41,7 +42,7 @@ export default function RadioInputsField(props: {
               <input
                 type="radio"
                 checked={props.field.value === option.value}
-                value={option.value}
+                value={props.answer}
                 onChange={(e) => {
                   props.addValueCB &&
                     props.addValueCB(props.field.id, e.target.value);
