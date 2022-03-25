@@ -7,7 +7,7 @@ export default function DropdownField(props: {
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: string) => void;
+  addValueCB?: (value: any) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -40,8 +40,7 @@ export default function DropdownField(props: {
             value={props.answer}
             onChange={(e) => {
               e.preventDefault();
-              props.addValueCB &&
-                props.addValueCB(props.field.id, e.target.value);
+              props.addValueCB && props.addValueCB(e.target.value);
             }}
             className="border-2 border-gray-200 p-2 rounded-lg  my-2 bg-white"
           >

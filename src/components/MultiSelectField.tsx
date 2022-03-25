@@ -7,7 +7,7 @@ export default function MultiSelectField(props: {
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: any) => void;
+  addValueCB?: (value: any) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -43,7 +43,6 @@ export default function MultiSelectField(props: {
               e.preventDefault();
               props.addValueCB &&
                 props.addValueCB(
-                  props.field.id,
                   Array.from(e.target.selectedOptions, (item) => item.value)
                 );
             }}

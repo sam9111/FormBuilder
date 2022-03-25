@@ -5,7 +5,7 @@ export default function TextField(props: {
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: string) => void;
+  addValueCB?: (value: any) => void;
 }) {
   return (
     <>
@@ -17,9 +17,7 @@ export default function TextField(props: {
             value={props.answer}
             className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
             onChange={(e) => {
-              e.preventDefault();
-              props.addValueCB &&
-                props.addValueCB(props.field.id, e.target.value);
+              props.addValueCB && props.addValueCB(e.target.value);
             }}
           />
         </div>

@@ -1,33 +1,48 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import { FormData } from "../types/interfaces";
 
 import { fetchForm } from "../utils/storageUtils";
-import { FormField } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import TextField from "../components/TextField";
 import MultiSelectField from "../components/MultiSelectField";
-const initialAnswers = (form: FormData) => {
+
+const initialAnswers: (form: FormData) => Answer[] = (form) => {
   return form.formFields.map((field) => {
     return { id: field.id, value: "" };
   });
 };
+
+type AnswerAction = SetAnswer;
+
+type SetAnswer = {
+  type: "setAnswer";
+  id: number;
+  value: string;
+};
+
 export default function Preview(props: { formID: number }) {
   const [form, setForm] = useState<FormData>(() => fetchForm(props.formID));
   const [fieldState, setFieldState] = useState<FormField>(form.formFields[0]);
-  const [answers, setAnswers] = useState(() => initialAnswers(form));
+
   const [showAnswers, setShowAnswers] = useState(false);
-  const addValue = (id: number, value: any) => {
-    setAnswers(
-      answers.map((answer) =>
-        answer.id === id ? { ...answer, value } : answer
-      )
-    );
+
+  const reducer = (answers: Answer[], action: AnswerAction) => {
+    switch (action.type) {
+      case "setAnswer":
+        return answers.map((answer: Answer) =>
+          answer.id === action.id ? { ...answer, value: action.value } : answer
+        );
+      default:
+        return answers;
+    }
   };
 
-  console.log(answers);
-  console.log(fieldState);
+  const [answers, dispatch] = useReducer(reducer, null, () =>
+    initialAnswers(form)
+  );
 
   function FieldPreview(fieldState: FormField) {
     switch (fieldState.kind) {
@@ -40,7 +55,9 @@ export default function Preview(props: { formID: number }) {
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={addValue}
+            addValueCB={(value: any) => {
+              dispatch({ type: "setAnswer", id: fieldState.id, value: value });
+            }}
           />
         );
       case "radio":
@@ -52,7 +69,9 @@ export default function Preview(props: { formID: number }) {
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={addValue}
+            addValueCB={(value: any) => {
+              dispatch({ type: "setAnswer", id: fieldState.id, value: value });
+            }}
           />
         );
       case "textarea":
@@ -64,7 +83,9 @@ export default function Preview(props: { formID: number }) {
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={addValue}
+            addValueCB={(value: any) => {
+              dispatch({ type: "setAnswer", id: fieldState.id, value: value });
+            }}
           />
         );
       case "multiselect":
@@ -78,7 +99,9 @@ export default function Preview(props: { formID: number }) {
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={addValue}
+            addValueCB={(value: any) => {
+              dispatch({ type: "setAnswer", id: fieldState.id, value: value });
+            }}
           />
         );
       default:
@@ -90,7 +113,9 @@ export default function Preview(props: { formID: number }) {
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={addValue}
+            addValueCB={(value: any) => {
+              dispatch({ type: "setAnswer", id: fieldState.id, value: value });
+            }}
           />
         );
     }
