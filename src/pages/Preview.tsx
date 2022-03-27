@@ -1,8 +1,7 @@
 import { useState, useReducer } from "react";
-import { FormData } from "../types/interfaces";
 
 import { fetchForm } from "../utils/storageUtils";
-import { FormField, Answer } from "../types/custom";
+import { FormField, Answer, FormData } from "../types/custom";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";

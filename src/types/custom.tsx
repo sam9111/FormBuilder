@@ -1,5 +1,3 @@
-import { Option } from "./interfaces";
-
 export type Dropdown = {
   id: number;
   kind: "dropdown";
@@ -82,4 +80,39 @@ export const FIELD_TYPES = [
 export type Answer = {
   id: number;
   value: any;
+};
+
+export type FormData = {
+  id: number;
+  title: string;
+  formFields: FormField[];
+};
+
+export type Form = {
+  id?: number;
+  title: string;
+  description?: string;
+  is_public?: boolean;
+};
+
+export type Errors<T> = Partial<Record<keyof T, string>>;
+
+export const validateForm = (form: Form) => {
+  const errors: Errors<Form> = {};
+  if (form.title.length < 1) {
+    errors.title = "Title is required";
+  }
+
+  if (form.title.length > 100) {
+    errors.title = "Title must be less than 100 characters";
+  }
+  if (form.description && form.description.length > 1000) {
+    errors.description = "Description must be less than 100 characters";
+  }
+  return errors;
+};
+
+export type Option = {
+  id: number;
+  value: string;
 };

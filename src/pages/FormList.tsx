@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, navigate } from "raviger";
-import { FormData } from "../types/interfaces";
-import { FormField } from "../types/custom";
+
+import { FormField, FormData, Form } from "../types/custom";
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 
 import { useQueryParams } from "raviger";
+
+import Modal from "../components/common/Modal";
+import CreateForm from "../components/CreateForm";
 const initialFormFields: FormField[] = [
   { id: 1, label: "First Name", kind: "text", value: "" },
   { id: 2, label: "Last Name", kind: "text", value: "" },
@@ -13,11 +16,17 @@ const initialFormFields: FormField[] = [
   { id: 5, label: "Date of Birth", kind: "date", value: "" },
 ];
 
+const fetchForms = async (setFormsCB: (value: Form[]) => void) => {
+  const response = await fetch("https://tsapi.coronasafe.live/api/mock_test/");
+  const jsonData = await response.json();
+  setFormsCB(jsonData);
+};
+
 export default function FormList() {
-  const [state, setState] = useState<FormData[]>(() => getLocalForms());
-  const [formID, setFormID] = useState(0);
+  const [state, setState] = useState<Form[]>();
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState("");
+  const [newForm, setNewForm] = useState(false);
   const createForm = () => {
     const localForms = getLocalForms();
     const newForm = {
@@ -27,7 +36,6 @@ export default function FormList() {
     };
     saveLocalForms([...localForms, newForm]);
     navigate(`/form/${newForm.id}`);
-    setState(() => getLocalForms());
   };
 
   const deleteForm = (id: number) => {
@@ -40,8 +48,8 @@ export default function FormList() {
   };
 
   useEffect(() => {
-    setState(() => getLocalForms());
-  }, [formID]);
+    fetchForms(setState);
+  }, []);
 
   return (
     <div>
@@ -49,7 +57,7 @@ export default function FormList() {
         <div className="flex justify-between  items-center mb-2">
           <h2 className=" text-xl flex-1 font-bold">All Forms</h2>
           <button
-            onClick={() => createForm()}
+            onClick={() => setNewForm(true)}
             className="  text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
           >
             Create
@@ -88,44 +96,48 @@ export default function FormList() {
         </div>
       </div>
       <div className="flex flex-col gap-2 my-4 p-4">
-        {state
-          .filter((form) =>
-            form.title.toLowerCase().includes(search?.toLowerCase() || "")
-          )
-          .map((form) => {
-            return (
-              <div
-                key={form.id}
-                className="flex flex-col bg-gray-100  rounded-lg p-4  gap-2  text-lg font-semibold"
-              >
-                <span className="text-gray-500 text-sm ">{form.id}</span>
+        {state &&
+          state
+            .filter((form) =>
+              form.title.toLowerCase().includes(search?.toLowerCase() || "")
+            )
+            .map((form) => {
+              return (
+                <div
+                  key={form.id}
+                  className="flex flex-col bg-gray-100  rounded-lg p-4  gap-2  text-lg font-semibold"
+                >
+                  <span className="text-gray-500 text-sm ">{form.id}</span>
 
-                <div className="flex flex-row items-center justify-between">
-                  <div>
-                    <h3 className="">{form.title}</h3>
-                    <p className="text-sm text-gray-500">
-                      {form.formFields.length} Questions
-                    </p>
-                  </div>
-                  <div className="flex gap-4">
-                    <Link
-                      href={`/form/${form.id}`}
-                      className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-                    >
-                      Open
-                    </Link>
-                    <button
-                      onClick={() => deleteForm(form.id)}
-                      className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-                    >
-                      Delete
-                    </button>
+                  <div className="flex flex-row items-center justify-between">
+                    <div>
+                      <h3 className="">{form.title}</h3>
+                      <p className="text-sm text-gray-500">
+                        {/* {form.formFields.length} Questions */}
+                      </p>
+                    </div>
+                    <div className="flex gap-4">
+                      <Link
+                        href={`/form/${form.id}`}
+                        className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                      >
+                        Open
+                      </Link>
+                      {/* <button
+                        onClick={() => deleteForm(form.id)}
+                        className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                      >
+                        Delete
+                      </button> */}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
       </div>
+      <Modal open={newForm} closeCB={() => setNewForm(false)}>
+        <CreateForm />
+      </Modal>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Option } from "../types/interfaces";
-import { Dropdown } from "../types/custom";
+
+import { Dropdown, Option } from "../types/custom";
 export default function DropdownField(props: {
   answer?: string;
   field: Dropdown;

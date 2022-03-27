@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Option } from "../types/interfaces";
-import { MultiSelect } from "../types/custom";
+
+import { MultiSelect, Option } from "../types/custom";
 export default function MultiSelectField(props: {
   answer?: any;
   field: MultiSelect;
