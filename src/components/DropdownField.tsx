@@ -1,13 +1,14 @@
 import { useState } from "react";
-
-import { Dropdown, Option } from "../types/custom";
+import { Option } from "../types/interfaces";
+import { Dropdown } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 export default function DropdownField(props: {
-  answer?: string;
+  answer?: Answer;
   field: Dropdown;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (value: any) => void;
+  addValueCB?: (value: string) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -37,7 +38,7 @@ export default function DropdownField(props: {
         <div className="flex flex-col mx-auto  gap-4">
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <select
-            value={props.answer}
+            value={props.answer?.value || ""}
             onChange={(e) => {
               e.preventDefault();
               props.addValueCB && props.addValueCB(e.target.value);

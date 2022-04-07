@@ -1,11 +1,12 @@
 import { TextArea } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 export default function TextAreaField(props: {
-  answer?: string;
+  answer?: Answer;
   field: TextArea;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (value: any) => void;
+  addValueCB?: (value: string) => void;
 }) {
   return (
     <>
@@ -18,7 +19,7 @@ export default function TextAreaField(props: {
               e.preventDefault();
               props.addValueCB && props.addValueCB(e.target.value);
             }}
-            value={props.answer}
+            value={props.answer?.value || ""}
           />
         </div>
       ) : (

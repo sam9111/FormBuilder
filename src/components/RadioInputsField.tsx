@@ -1,13 +1,14 @@
 import { useState } from "react";
-
-import { RadioInputs, Option } from "../types/custom";
+import { Option } from "../types/interfaces";
+import { RadioInputs } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 export default function RadioInputsField(props: {
-  answer?: string;
+  answer?: Answer;
   field: RadioInputs;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (value: any) => void;
+  addValueCB?: (value: string) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -42,7 +43,7 @@ export default function RadioInputsField(props: {
               <input
                 type="radio"
                 checked={props.field.value === option.value}
-                value={props.answer}
+                value={props.answer?.value || ""}
                 onChange={(e) => {
                   props.addValueCB && props.addValueCB(e.target.value);
                 }}

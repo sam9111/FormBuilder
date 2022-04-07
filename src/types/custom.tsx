@@ -79,7 +79,7 @@ export const FIELD_TYPES = [
 
 export type Answer = {
   id: number;
-  value: any;
+  value: string | string[];
 };
 
 export type FormData = {
