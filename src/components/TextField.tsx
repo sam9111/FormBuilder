@@ -1,10 +1,12 @@
 import { Text, Date, PhoneNumber, Email } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 export default function TextField(props: {
+  answer?: Answer;
   field: Text | Date | PhoneNumber | Email;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: string) => void;
+  addValueCB?: (value: string) => void;
 }) {
   return (
     <>
@@ -13,12 +15,10 @@ export default function TextField(props: {
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <input
             type={props.field.kind}
-            value={props.field.value}
+            value={props.answer?.value || ""}
             className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
             onChange={(e) => {
-              e.preventDefault();
-              props.addValueCB &&
-                props.addValueCB(props.field.id, e.target.value);
+              props.addValueCB && props.addValueCB(e.target.value);
             }}
           />
         </div>

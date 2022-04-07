@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { RadioInputs } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 export default function RadioInputsField(props: {
+  answer?: Answer;
   field: RadioInputs;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: string) => void;
+  addValueCB?: (value: string) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -41,10 +43,9 @@ export default function RadioInputsField(props: {
               <input
                 type="radio"
                 checked={props.field.value === option.value}
-                value={option.value}
+                value={props.answer?.value || ""}
                 onChange={(e) => {
-                  props.addValueCB &&
-                    props.addValueCB(props.field.id, e.target.value);
+                  props.addValueCB && props.addValueCB(e.target.value);
                 }}
               />
               {option.value.toUpperCase()}

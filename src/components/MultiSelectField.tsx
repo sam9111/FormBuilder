@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { MultiSelect } from "../types/custom";
+import { FormField, Answer } from "../types/custom";
 export default function MultiSelectField(props: {
+  answer?: Answer;
   field: MultiSelect;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (id: number, value: any) => void;
+  addValueCB?: (value: string[]) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(props.field.options);
@@ -37,12 +39,11 @@ export default function MultiSelectField(props: {
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <select
             multiple={true}
-            value={props.field.value}
+            value={props.answer?.value || [""]}
             onChange={(e) => {
               e.preventDefault();
               props.addValueCB &&
                 props.addValueCB(
-                  props.field.id,
                   Array.from(e.target.selectedOptions, (item) => item.value)
                 );
             }}
@@ -60,7 +61,7 @@ export default function MultiSelectField(props: {
         </div>
       ) : (
         <div className="flex flex-col bg-gray-100  rounded-lg p-4     text-md font-medium">
-          <label>Dropdown</label>
+          <label>MULTI-SELECT</label>
           <div className="flex gap-2 w-full">
             <input
               value={props.field.label}

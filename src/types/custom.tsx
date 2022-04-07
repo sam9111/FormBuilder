@@ -78,3 +78,8 @@ export const FIELD_TYPES = [
   "tel",
   "date",
 ];
+
+export type Answer = {
+  id: number;
+  value: string | string[];
+};
