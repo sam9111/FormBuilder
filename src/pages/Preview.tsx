@@ -11,7 +11,9 @@ import MultiSelectField from "../components/MultiSelectField";
 
 const initialAnswers: (form: FormData) => Answer[] = (form) => {
   return form.formFields.map((field) => {
-    return { id: field.id, value: "" };
+    return field.kind === "multiselect"
+      ? { id: field.id, value: [""] }
+      : { id: field.id, value: "" };
   });
 };
 
@@ -20,7 +22,7 @@ type AnswerAction = SetAnswer | ClearAnswer;
 type SetAnswer = {
   type: "setAnswer";
   id: number;
-  value: string;
+  value: string | string[];
 };
 
 type ClearAnswer = {
@@ -53,19 +55,20 @@ export default function Preview(props: { formID: number }) {
     initialAnswers(form)
   );
 
+  console.log(answers);
+
   function FieldPreview() {
     const fieldState = form.formFields[currIndex];
+    const answer = answers.find((answer) => answer.id === fieldState.id);
     switch (fieldState.kind) {
       case "dropdown":
         return (
           <DropdownField
-            answer={
-              answers.find((answer) => answer.id === fieldState.id)?.value || ""
-            }
+            answer={answer}
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={(value: any) => {
+            addValueCB={(value: string) => {
               dispatch({ type: "setAnswer", id: fieldState.id, value: value });
             }}
           />
@@ -73,13 +76,11 @@ export default function Preview(props: { formID: number }) {
       case "radio":
         return (
           <RadioInputsField
-            answer={
-              answers.find((answer) => answer.id === fieldState.id)?.value || ""
-            }
+            answer={answer}
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={(value: any) => {
+            addValueCB={(value: string) => {
               dispatch({ type: "setAnswer", id: fieldState.id, value: value });
             }}
           />
@@ -87,13 +88,11 @@ export default function Preview(props: { formID: number }) {
       case "textarea":
         return (
           <TextAreaField
-            answer={
-              answers.find((answer) => answer.id === fieldState.id)?.value || ""
-            }
+            answer={answer}
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={(value: any) => {
+            addValueCB={(value: string) => {
               dispatch({ type: "setAnswer", id: fieldState.id, value: value });
             }}
           />
@@ -101,15 +100,11 @@ export default function Preview(props: { formID: number }) {
       case "multiselect":
         return (
           <MultiSelectField
-            answer={
-              answers.find((answer) => answer.id === fieldState.id)?.value || [
-                "",
-              ]
-            }
+            answer={answer}
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={(value: any) => {
+            addValueCB={(value: string[]) => {
               dispatch({ type: "setAnswer", id: fieldState.id, value: value });
             }}
           />
@@ -117,13 +112,11 @@ export default function Preview(props: { formID: number }) {
       default:
         return (
           <TextField
-            answer={
-              answers.find((answer) => answer.id === fieldState.id)?.value || ""
-            }
+            answer={answer}
             key={fieldState.id}
             field={fieldState}
             preview={true}
-            addValueCB={(value: any) => {
+            addValueCB={(value: string) => {
               dispatch({ type: "setAnswer", id: fieldState.id, value: value });
             }}
           />
