@@ -14,8 +14,8 @@ export const request = async (
   if (method === "GET") {
     const requestParams = data
       ? `?${Object.keys(data)
-          .map((key) => `${key}=${data[key]}`)
-          .join("&")}`
+        .map((key) => `${key}=${data[key]}`)
+        .join("&")}`
       : "";
     url = `${API_BASE_URL}${endpoint}${requestParams}`;
     payload = "";
@@ -23,12 +23,15 @@ export const request = async (
     url = `${API_BASE_URL}${endpoint}`;
     payload = data ? JSON.stringify(data) : "";
   }
+
   //basic auth
   // const auth = "Basic " + window.btoa("samyuktha:Sweety9111@");
 
   //token auth
   const token = localStorage.getItem("token");
-  const auth = token ? "Bearer " + token : "";
+
+  const auth = token ? `Token ${token}` : "";
+
   try {
     const response = await fetch(url, {
       method: method,
@@ -67,4 +70,8 @@ export const login = (username: string, password: string) => {
 
 export const me = () => {
   return request("users/me/", "GET");
+};
+
+export const mock_test = () => {
+  return request("mock_test/", "GET");
 };

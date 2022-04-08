@@ -5,7 +5,7 @@ import { FormField, FormData, Form } from "../types/custom";
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 
 import { useQueryParams } from "raviger";
-
+import { mock_test } from "../utils/apiUtils";
 import Modal from "../components/common/Modal";
 import CreateForm from "../components/CreateForm";
 const initialFormFields: FormField[] = [
@@ -17,9 +17,13 @@ const initialFormFields: FormField[] = [
 ];
 
 const fetchForms = async (setFormsCB: (value: Form[]) => void) => {
-  const response = await fetch("https://tsapi.coronasafe.live/api/mock_test/");
-  const jsonData = await response.json();
-  setFormsCB(jsonData);
+  try {
+    const data = await mock_test();
+
+    setFormsCB(data);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export default function FormList() {
@@ -27,25 +31,6 @@ export default function FormList() {
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState("");
   const [newForm, setNewForm] = useState(false);
-  const createForm = () => {
-    const localForms = getLocalForms();
-    const newForm = {
-      id: Number(new Date()),
-      title: "Untitled Form",
-      formFields: initialFormFields,
-    };
-    saveLocalForms([...localForms, newForm]);
-    navigate(`/form/${newForm.id}`);
-  };
-
-  const deleteForm = (id: number) => {
-    const localForms = getLocalForms();
-    const updatedLocalForms = localForms.filter(
-      (form: FormData) => form.id !== id
-    );
-    saveLocalForms(updatedLocalForms);
-    setState(() => getLocalForms());
-  };
 
   useEffect(() => {
     fetchForms(setState);

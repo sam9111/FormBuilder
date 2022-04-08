@@ -9,9 +9,9 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      localStorage.removeItem("token");
       const response = await login(username, password);
-
-      console.log(response);
+      console.log("response", response);
       localStorage.setItem("token", response.token);
       navigate("/");
       window.location.reload();

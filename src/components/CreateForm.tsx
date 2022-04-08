@@ -1,7 +1,7 @@
 import { navigate } from "raviger";
 import React, { useState } from "react";
 import { Errors, Form, validateForm } from "../types/custom";
-
+import { createForm } from "../utils/apiUtils";
 export default function CreateForm() {
   const [form, setForm] = useState<Form>({
     title: "",
@@ -21,19 +21,11 @@ export default function CreateForm() {
     const validationErrors = validateForm(form);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length === 0) {
-      // Basic Auth Credentials
-      const auth = "Basic " + window.btoa("samyuktha:Sweety9111@");
-      const response = await fetch("https://tsapi.coronasafe.live/api/forms/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: auth,
-        },
-        body: JSON.stringify(form),
-      });
-      const data = await response.json();
-      if (response.ok) {
+      try {
+        const data = await createForm(form);
         navigate(`/forms/${data.id}`);
+      } catch (err) {
+        console.log(err);
       }
     }
   };

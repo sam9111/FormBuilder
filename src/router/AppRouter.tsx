@@ -3,23 +3,24 @@ import AppContainer from "../AppContainer";
 import Form from "../pages/Form";
 import FormList from "../pages/FormList";
 import Preview from "../pages/Preview";
+import Login from "../components/Login";
+import { useEffect, useState } from "react";
+import { me } from "../utils/apiUtils";
+import { User } from "../types/usertypes";
 const routes = {
-  "/": () => (
-    <AppContainer>
-      <FormList />
-    </AppContainer>
-  ),
-  "/form/:id": ({ id }: { id: string }) => (
-    <AppContainer>
-      <Form formID={Number(id)} />
-    </AppContainer>
-  ),
+  "/": () => <FormList />,
+  "/login": () => <Login />,
+  "/forms/:id": ({ id }: { id: string }) => <Form formID={Number(id)} />,
   "/preview/:formID": ({ formID }: { formID: string }) => (
     <Preview formID={Number(formID)} />
   ),
 };
 
-export default function AppRouter() {
+export default function AppRouter(props: { currentUser: User }) {
   const routeResult = useRoutes(routes);
-  return routeResult || <div className="">404</div>;
+  return (
+    (
+      <AppContainer currentUser={props.currentUser}>{routeResult}</AppContainer>
+    ) || <div className="">404</div>
+  );
 }

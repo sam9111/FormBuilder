@@ -54,8 +54,6 @@ export default function Preview(props: { formID: number }) {
     initialAnswers(form)
   );
 
-  console.log(answers);
-
   function FieldPreview() {
     const fieldState = form.formFields[currIndex];
     const answer = answers.find((answer) => answer.id === fieldState.id);

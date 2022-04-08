@@ -1,8 +1,8 @@
 import { useEffect, useState, useRef, useReducer } from "react";
 
 import { Link } from "raviger";
-
-import { FormField, FIELD_TYPES, FormData, Option } from "../types/custom";
+import { Option } from "../types/interfaces";
+import { FormField, FIELD_TYPES, FormData } from "../types/custom";
 import { fetchForm, saveFormData } from "../utils/storageUtils";
 import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";

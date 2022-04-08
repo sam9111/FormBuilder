@@ -1,3 +1,5 @@
+import { Option } from "./interfaces";
+
 export type Dropdown = {
   id: number;
   kind: "dropdown";
@@ -110,9 +112,4 @@ export const validateForm = (form: Form) => {
     errors.description = "Description must be less than 100 characters";
   }
   return errors;
-};
-
-export type Option = {
-  id: number;
-  value: string;
 };
