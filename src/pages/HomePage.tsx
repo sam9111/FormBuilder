@@ -5,7 +5,7 @@ import { FormField, Form } from "../types/custom";
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 
 import { useQueryParams } from "raviger";
-import { mock_test, fetchForms } from "../utils/apiUtils";
+import { mock_test, getForms } from "../utils/apiUtils";
 import Modal from "../components/common/Modal";
 import CreateForm from "../components/CreateForm";
 import { Pagination } from "../types/common";
@@ -19,7 +19,7 @@ import { Pagination } from "../types/common";
 
 const listForms = async (setFormsCB: (value: Form[]) => void) => {
   try {
-    const data: Pagination<Form> = await fetchForms({
+    const data: Pagination<Form> = await getForms({
       offset: 0,
       limit: 2,
     });

@@ -53,14 +53,7 @@ export const request = async (
   }
 };
 
-export const createForm = (form: Form) => {
-  return request("forms/", "POST", form);
-};
-
-export const fetchForm = (id: number) => {
-  return request(`forms/${id}`, "GET");
-};
-
+//auth
 export const login = (username: string, password: string) => {
   return request("auth-token/", "POST", {
     username: username,
@@ -72,11 +65,29 @@ export const me = () => {
   return request("users/me/", "GET");
 };
 
+//forms
 export const mock_test = () => {
   return request("mock_test/", "GET");
 };
 
-export const fetchForms = (pageParams: PaginationParams) => {
+export const getForms = (pageParams: PaginationParams) => {
   return request("forms/", "GET", pageParams);
 }
 
+
+//form
+export const createForm = (form: Form) => {
+  return request("forms/", "POST", form);
+};
+
+export const getForm = (id: number) => {
+  return request(`forms/${id}`, "GET");
+};
+
+export const putForm = (id: number, form: {
+  title: string,
+  description?: string,
+  is_public?: boolean,
+}) => {
+  return request(`forms/${id}/`, "PUT", form);
+}

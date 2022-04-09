@@ -2,23 +2,23 @@ import { useEffect, useState, useRef, useReducer } from "react";
 import moment from "moment";
 import { Link } from "raviger";
 import { Option } from "../types/interfaces";
-import { FormField, FIELD_TYPES, FormData, Form } from "../types/custom";
-import { saveFormData } from "../utils/storageUtils";
-import { fetchForm } from "../utils/apiUtils";
+import { FormField, FIELD_TYPES, FormData } from "../types/custom";
+import { getForm, putForm } from "../utils/apiUtils";
 import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import MultiSelectField from "../components/MultiSelectField";
+import { Errors, Form, validateForm } from "../types/custom";
+
 type FormAction =
   | AddAction
   | RemoveAction
-  | UpdateTitleAction
   | UpdateAction
   | UpdateOptionsAction
   | ClearFormAction
   | FormReadyAction
-  | UpdateDescriptionAction;
+  | UpdateFormDetailsAction;
 
 type FormReadyAction = {
   type: "formReady";
@@ -36,9 +36,11 @@ type AddAction = {
   kind: string;
 };
 
-type UpdateTitleAction = {
-  type: "updateTitle";
+type UpdateFormDetailsAction = {
+  type: "updateFormDetails";
   title: string;
+  description: string;
+  is_public: boolean;
 };
 
 type UpdateAction = {
@@ -57,14 +59,9 @@ type ClearFormAction = {
   type: "clearForm";
 };
 
-type UpdateDescriptionAction = {
-  type: "updateDescription";
-  description: string;
-};
-
-const getForm = async (formID: number) => {
+const fetchForm = async (formID: number) => {
   try {
-    const data: Form = await fetchForm(formID);
+    const data: Form = await getForm(formID);
 
     const formData: FormData = {
       id: data.id,
@@ -85,6 +82,28 @@ export default function FormPage(props: { formID: number }) {
   const [newField, setNewField] = useState("");
   const [newFieldKind, setNewFieldKind] = useState(FIELD_TYPES[0]);
   const titleRef = useRef<HTMLInputElement>(null);
+
+  const saveFormData = async (formData: FormData) => {
+    const validationErrors = validateForm({
+      title: formData.title || "",
+      description: formData.description,
+    });
+
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        if (formData.id && formData.title) {
+          const response: Form = await putForm(formData.id, {
+            title: formData.title,
+            description: formData.description,
+            is_public: formData.is_public,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
 
   const getNewField = (label: string, kind: string) => {
     let newFormField: FormField = {
@@ -150,11 +169,14 @@ export default function FormPage(props: { formID: number }) {
       case "formReady":
         return action.payload;
 
-      case "updateDescription":
+      case "updateFormDetails":
         return {
           ...state,
+          title: action.title,
           description: action.description,
+          is_public: action.is_public,
         };
+
       case "addField":
         const newField = getNewField(action.label, action.kind);
         setNewField("");
@@ -171,11 +193,6 @@ export default function FormPage(props: { formID: number }) {
           ),
         };
 
-      case "updateTitle":
-        return {
-          ...state,
-          title: action.title,
-        };
       case "updateLabel":
         return {
           ...state,
@@ -206,6 +223,9 @@ export default function FormPage(props: { formID: number }) {
       case "clearForm":
         return {
           ...state,
+          title: "",
+          description: "",
+          is_public: false,
           formFields: state.formFields.map((field) => ({
             ...field,
             label: "",
@@ -214,16 +234,19 @@ export default function FormPage(props: { formID: number }) {
     }
   };
 
-  const initialState = {
-    id: props.formID,
+  const initialState: FormData = {
+    id: 0,
     title: "",
+    description: "",
+    is_public: false,
     formFields: [],
+    created_date: "",
+    modified_date: "",
   };
-
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    getForm(props.formID).then((formData) => {
+    fetchForm(props.formID).then((formData) => {
       dispatch({
         type: "formReady",
         payload: formData || initialState,
@@ -238,6 +261,17 @@ export default function FormPage(props: { formID: number }) {
       document.title = "React Form";
     };
   }, []);
+
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      saveFormData(state);
+    }, 3000);
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [state]);
+
+  const [errors, setErrors] = useState<Errors<Form>>({});
 
   return (
     <div className="flex flex-col gap-4 p-4 divide-y-4 divide-dotted my-4">
@@ -264,27 +298,71 @@ export default function FormPage(props: { formID: number }) {
           {moment(state.modified_date).format("MMMM Do YYYY, h:mm:ss a")}
         </span>
         <div className="flex flex-col gap-2 my-4 p-4">
-          <label className="font-semibold text-lg">Title</label>
-          <input
-            type="text"
-            className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
-            value={state.title}
-            onChange={(e) => {
-              dispatch({ type: "updateTitle", title: e.target.value });
-            }}
-            ref={titleRef}
-          />
-          <label className="font-semibold text-lg">Description</label>
-          <textarea
-            className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
-            onChange={(e) => {
-              dispatch({
-                type: "updateDescription",
-                description: e.target.value,
-              });
-            }}
-            value={state.description || ""}
-          />
+          <div className="flex flex-col mb-4">
+            <label className="font-semibold text-lg">Title</label>
+            <input
+              type="text"
+              className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
+              value={state.title}
+              onChange={(e) => {
+                dispatch({
+                  type: "updateFormDetails",
+                  title: e.target.value,
+                  description: state.description || "",
+                  is_public: state.is_public || false,
+                });
+              }}
+              ref={titleRef}
+            />
+            {errors.title && <p className="text-red-500">{errors.title}</p>}
+          </div>
+          <div className="flex flex-col mb-4">
+            <label className="font-semibold text-lg">Description</label>
+            <textarea
+              className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
+              onChange={(e) => {
+                dispatch({
+                  type: "updateFormDetails",
+                  title: state.title || "",
+                  description: e.target.value,
+                  is_public: state.is_public || false,
+                });
+              }}
+              value={state.description}
+            />
+
+            {errors.description && (
+              <p className="text-red-500">{errors.description}</p>
+            )}
+          </div>
+          <div className="mb-4">
+            <input
+              className="mr-2 border-2 border-gray-200 rounded-lg p-2 my-2 flex-1"
+              type="checkbox"
+              name="is_public"
+              id="is_public"
+              value={state.is_public ? "true" : "false"}
+              onChange={(e) => {
+                dispatch({
+                  type: "updateFormDetails",
+                  title: state.title || "",
+                  description: state.description || "",
+                  is_public: e.target.checked ? true : false,
+                });
+              }}
+            />
+            <label
+              htmlFor="is_public"
+              className={`${
+                errors.is_public ? "text-red-500" : ""
+              } font-medium`}
+            >
+              Is Public
+            </label>
+            {errors.is_public && (
+              <p className="text-red-500">{errors.is_public}</p>
+            )}
+          </div>
         </div>
       </div>
       <div className="flex flex-col gap-2  p-4">

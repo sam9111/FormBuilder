@@ -99,6 +99,7 @@ export type Errors<T> = Partial<Record<keyof T, string>>;
 
 export const validateForm = (form: Form) => {
   const errors: Errors<Form> = {};
+
   if (form.title.length < 1) {
     errors.title = "Title is required";
   }
@@ -106,6 +107,8 @@ export const validateForm = (form: Form) => {
   if (form.title.length > 100) {
     errors.title = "Title must be less than 100 characters";
   }
+
+
   if (form.description && form.description.length > 1000) {
     errors.description = "Description must be less than 100 characters";
   }

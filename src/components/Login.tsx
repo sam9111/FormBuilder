@@ -11,7 +11,7 @@ export default function Login() {
     try {
       localStorage.removeItem("token");
       const response = await login(username, password);
-      console.log("response", response);
+
       localStorage.setItem("token", response.token);
       navigate("/");
       window.location.reload();
