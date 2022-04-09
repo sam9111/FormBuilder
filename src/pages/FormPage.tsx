@@ -3,7 +3,15 @@ import moment from "moment";
 import { Link } from "raviger";
 import { Option } from "../types/interfaces";
 import { FormField, FIELD_TYPES, FormData } from "../types/custom";
-import { getForm, putForm } from "../utils/apiUtils";
+import {
+  getForm,
+  putForm,
+  getFormFields,
+  postFormField,
+  putFormField,
+  patchFormField,
+  deleteFormField,
+} from "../utils/apiUtils";
 import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
@@ -61,18 +69,47 @@ type ClearFormAction = {
 
 const fetchForm = async (formID: number) => {
   try {
-    const data: Form = await getForm(formID);
-
+    const formResponse: Form = await getForm(formID);
+    const fieldsResponse = await getFormFields(formID);
     const formData: FormData = {
-      id: data.id,
-      title: data.title,
-      description: data.description,
-      is_public: data.is_public,
-      formFields: [],
-      created_date: data.created_date,
-      modified_date: data.modified_date,
+      id: formResponse.id,
+      title: formResponse.title,
+      description: formResponse.description,
+      is_public: formResponse.is_public,
+      formFields: fieldsResponse.results,
+      created_date: formResponse.created_date,
+      modified_date: formResponse.modified_date,
     };
     return formData;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const createField = async (formID: number, fieldData: FormField) => {
+  try {
+    const response = await postFormField(formID, fieldData);
+    console.log(response);
+  } catch (err) {
+    console.log(err);
+  }
+};
+const updateField = async (
+  formID: number,
+  fieldID: number,
+  fieldData: Partial<FormField>
+) => {
+  try {
+    const response = await patchFormField(formID, fieldID, fieldData);
+    console.log(response);
+  } catch (err) {
+    console.log(err);
+  }
+};
+const deleteField = async (formID: number, fieldID: number) => {
+  try {
+    const response = await deleteFormField(formID, fieldID);
+    console.log(response);
   } catch (err) {
     console.log(err);
   }
@@ -181,11 +218,13 @@ export default function FormPage(props: { formID: number }) {
         const newField = getNewField(action.label, action.kind);
         setNewField("");
         setNewFieldKind("text");
+        state.id && createField(state.id, newField);
         return {
           ...state,
           formFields: [...state.formFields, newField],
         };
       case "removeField":
+        state.id && deleteField(state.id, action.id);
         return {
           ...state,
           formFields: state.formFields.filter(
@@ -194,6 +233,7 @@ export default function FormPage(props: { formID: number }) {
         };
 
       case "updateLabel":
+        state.id && updateField(state.id, action.id, { label: action.label });
         return {
           ...state,
           formFields: state.formFields.map((field) => {
@@ -265,7 +305,7 @@ export default function FormPage(props: { formID: number }) {
   useEffect(() => {
     let timeout = setTimeout(() => {
       saveFormData(state);
-    }, 3000);
+    }, 5000);
     return () => {
       clearTimeout(timeout);
     };

@@ -1,4 +1,4 @@
-import { Form } from "../types/custom";
+import { Form, FormField } from "../types/custom";
 import { PaginationParams } from "../types/common"
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
 
@@ -84,10 +84,31 @@ export const getForm = (id: number) => {
   return request(`forms/${id}`, "GET");
 };
 
-export const putForm = (id: number, form: {
+export const putForm = (id: number, payload: {
   title: string,
   description?: string,
   is_public?: boolean,
 }) => {
-  return request(`forms/${id}/`, "PUT", form);
+  return request(`forms/${id}/`, "PUT", payload);
+}
+
+//formFields
+export const getFormFields = (form_pk: number) => {
+  return request(`forms/${form_pk}/fields/`, "GET")
+}
+
+export const postFormField = (form_pk: number, payload: FormField) => {
+  return request(`forms/${form_pk}/fields/`, "POST", payload)
+}
+
+export const putFormField = (form_pk: number, id: number, payload: FormField) => {
+  return request(`forms/${form_pk}/fields/${id}/`, "PUT", payload)
+}
+
+export const patchFormField = (form_pk: number, id: number, payload: Partial<FormField>) => {
+  return request(`forms/${form_pk}/fields/${id}/`, "PATCH", payload)
+}
+
+export const deleteFormField = (form_pk: number, id: number) => {
+  return request(`forms/${form_pk}/fields/${id}/`, "DELETE")
 }
