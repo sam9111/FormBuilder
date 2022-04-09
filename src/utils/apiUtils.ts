@@ -1,5 +1,5 @@
 import { Form } from "../types/custom";
-
+import { PaginationParams } from "../types/common"
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
 
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
@@ -58,7 +58,7 @@ export const createForm = (form: Form) => {
 };
 
 export const fetchForm = (id: number) => {
-  return request(`forms`, "GET", { id: id });
+  return request(`forms/${id}`, "GET");
 };
 
 export const login = (username: string, password: string) => {
@@ -75,3 +75,8 @@ export const me = () => {
 export const mock_test = () => {
   return request("mock_test/", "GET");
 };
+
+export const fetchForms = (pageParams: PaginationParams) => {
+  return request("forms/", "GET", pageParams);
+}
+

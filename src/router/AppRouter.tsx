@@ -1,18 +1,18 @@
 import { useRoutes } from "raviger";
 import AppContainer from "../AppContainer";
-import Form from "../pages/Form";
-import FormList from "../pages/FormList";
-import Preview from "../pages/Preview";
+import FormPage from "../pages/FormPage";
+import HomePage from "../pages/HomePage";
+import PreviewPage from "../pages/PreviewPage";
 import Login from "../components/Login";
 import { useEffect, useState } from "react";
 import { me } from "../utils/apiUtils";
 import { User } from "../types/usertypes";
 const routes = {
-  "/": () => <FormList />,
+  "/": () => <HomePage />,
   "/login": () => <Login />,
-  "/forms/:id": ({ id }: { id: string }) => <Form formID={Number(id)} />,
+  "/forms/:id": ({ id }: { id: string }) => <FormPage formID={Number(id)} />,
   "/preview/:formID": ({ formID }: { formID: string }) => (
-    <Preview formID={Number(formID)} />
+    <PreviewPage formID={Number(formID)} />
   ),
 };
 

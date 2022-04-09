@@ -84,19 +84,17 @@ export type Answer = {
   value: string | string[];
 };
 
-export type FormData = {
-  id: number;
-  title: string;
-  formFields: FormField[];
-};
 
 export type Form = {
   id?: number;
   title: string;
   description?: string;
   is_public?: boolean;
+  created_date?: string;
+  modified_date?: string;
 };
 
+export type FormData = Partial<Form> & { formFields: FormField[] };
 export type Errors<T> = Partial<Record<keyof T, string>>;
 
 export const validateForm = (form: Form) => {

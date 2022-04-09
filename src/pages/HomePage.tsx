@@ -1,39 +1,43 @@
 import { useEffect, useState } from "react";
 import { Link, navigate } from "raviger";
 
-import { FormField, FormData, Form } from "../types/custom";
+import { FormField, Form } from "../types/custom";
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
 
 import { useQueryParams } from "raviger";
-import { mock_test } from "../utils/apiUtils";
+import { mock_test, fetchForms } from "../utils/apiUtils";
 import Modal from "../components/common/Modal";
 import CreateForm from "../components/CreateForm";
-const initialFormFields: FormField[] = [
-  { id: 1, label: "First Name", kind: "text", value: "" },
-  { id: 2, label: "Last Name", kind: "text", value: "" },
-  { id: 3, label: "Email", kind: "email", value: "" },
-  { id: 4, label: "Phone Number", kind: "tel", value: "" },
-  { id: 5, label: "Date of Birth", kind: "date", value: "" },
-];
+import { Pagination } from "../types/common";
+// const initialFormFields: FormField[] = [
+//   { id: 1, label: "First Name", kind: "text", value: "" },
+//   { id: 2, label: "Last Name", kind: "text", value: "" },
+//   { id: 3, label: "Email", kind: "email", value: "" },
+//   { id: 4, label: "Phone Number", kind: "tel", value: "" },
+//   { id: 5, label: "Date of Birth", kind: "date", value: "" },
+// ];
 
-const fetchForms = async (setFormsCB: (value: Form[]) => void) => {
+const listForms = async (setFormsCB: (value: Form[]) => void) => {
   try {
-    const data = await mock_test();
+    const data: Pagination<Form> = await fetchForms({
+      offset: 0,
+      limit: 2,
+    });
 
-    setFormsCB(data);
+    setFormsCB(data.results);
   } catch (err) {
     console.log(err);
   }
 };
 
-export default function FormList() {
+export default function HomePage() {
   const [state, setState] = useState<Form[]>();
   const [{ search }, setQuery] = useQueryParams();
   const [searchString, setSearchString] = useState("");
   const [newForm, setNewForm] = useState(false);
 
   useEffect(() => {
-    fetchForms(setState);
+    listForms(setState);
   }, []);
 
   return (

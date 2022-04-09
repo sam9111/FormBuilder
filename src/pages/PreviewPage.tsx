@@ -28,7 +28,7 @@ type ClearAnswer = {
   type: "clearAnswer";
 };
 
-export default function Preview(props: { formID: number }) {
+export default function PreviewPage(props: { formID: number }) {
   const [form, setForm] = useState<FormData>(() => fetchForm(props.formID));
 
   const [currIndex, setIndex] = useState(0);
