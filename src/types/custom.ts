@@ -2,71 +2,51 @@ import { Option } from "./interfaces";
 
 export type Dropdown = {
   id: number;
-  kind: "dropdown";
+  kind: "DROPDOWN";
   options: Option[];
   label: string;
   value: string;
+
 };
 export type Text = {
   id: number;
-  kind: "text";
+  kind: "TEXT";
   label: string;
   value: string;
+  meta: {
+    type: string;
+  }
 };
 
-export type RadioInputs = {
+export type Radio = {
   id: number;
-  kind: "radio";
+  kind: "RADIO";
   options: Option[];
   label: string;
   value: string;
+
 };
 
-export type TextArea = {
+export type GenericInput = {
   id: number;
-  kind: "textarea";
+  kind: "GENERIC";
   label: string;
-  value: string;
+  options?: Option[];
+  value: string | string[];
+  meta: {
+    type: string;
+  }
 };
 
-export type MultiSelect = {
-  id: number;
-  kind: "multiselect";
-  options: Option[];
-  label: string;
-  value: string[];
-};
 
-export type Email = {
-  id: number;
-  kind: "email";
-  label: string;
-  value: string;
-};
 
-export type PhoneNumber = {
-  id: number;
-  kind: "tel";
-  label: string;
-  value: string;
-};
-
-export type Date = {
-  id: number;
-  kind: "date";
-  label: string;
-  value: string;
-};
 
 export type FormField =
   | Dropdown
   | Text
-  | RadioInputs
-  | TextArea
-  | MultiSelect
-  | Email
-  | PhoneNumber
-  | Date;
+  | Radio
+  | GenericInput
+
 
 export const FIELD_TYPES = [
   "text",

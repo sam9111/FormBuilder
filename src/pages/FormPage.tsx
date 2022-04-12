@@ -89,7 +89,6 @@ const fetchForm = async (formID: number) => {
 const createField = async (formID: number, fieldData: FormField) => {
   try {
     const response = await postFormField(formID, fieldData);
-    console.log(response);
   } catch (err) {
     console.log(err);
   }
@@ -109,7 +108,6 @@ const updateField = async (
 const deleteField = async (formID: number, fieldID: number) => {
   try {
     const response = await deleteFormField(formID, fieldID);
-    console.log(response);
   } catch (err) {
     console.log(err);
   }
@@ -142,63 +140,64 @@ export default function FormPage(props: { formID: number }) {
     }
   };
 
-  const getNewField = (label: string, kind: string) => {
-    let newFormField: FormField = {
-      id: Number(new Date()),
+  const getNewField = (label: string, type: string) => {
+    const id = Number(new Date());
+
+    let fieldData: FormField = {
+      id: id,
       label: label,
-      kind: "text",
+      kind: "TEXT",
+      meta: {
+        type: type,
+      },
       value: "",
     };
-    switch (kind) {
-      case "email":
-        newFormField = {
-          ...newFormField,
-          kind: "email",
-        };
-        break;
-      case "tel":
-        newFormField = {
-          ...newFormField,
-          kind: "tel",
-        };
-        break;
-      case "date":
-        newFormField = {
-          ...newFormField,
-          kind: "date",
-        };
-        break;
+
+    switch (type) {
       case "dropdown":
-        newFormField = {
-          ...newFormField,
-          kind: "dropdown",
+        fieldData = {
+          id: id,
+          label: label,
+          kind: "DROPDOWN",
+          value: "",
           options: [],
         };
         break;
       case "radio":
-        newFormField = {
-          ...newFormField,
-          kind: "radio",
+        fieldData = {
+          id: id,
+          label: label,
+          kind: "RADIO",
+          value: "",
           options: [],
         };
         break;
       case "textarea":
-        newFormField = {
-          ...newFormField,
-          kind: "textarea",
+        fieldData = {
+          id: id,
+          kind: "GENERIC",
+          label: label,
+          meta: {
+            type: type,
+          },
+          value: "",
         };
         break;
       case "multiselect":
-        newFormField = {
-          ...newFormField,
-          kind: "multiselect",
+        fieldData = {
+          id: id,
+          label: label,
           options: [],
           value: [],
+          meta: {
+            type: type,
+          },
+          kind: "GENERIC",
         };
         break;
     }
 
-    return newFormField;
+    return fieldData;
   };
 
   const reducer = (state: FormData, action: FormAction) => {
@@ -218,7 +217,7 @@ export default function FormPage(props: { formID: number }) {
         const newField = getNewField(action.label, action.kind);
         setNewField("");
         setNewFieldKind("text");
-        state.id && createField(state.id, newField);
+        state.id && newField && createField(state.id, newField);
         return {
           ...state,
           formFields: [...state.formFields, newField],
@@ -302,14 +301,14 @@ export default function FormPage(props: { formID: number }) {
     };
   }, []);
 
-  useEffect(() => {
-    let timeout = setTimeout(() => {
-      saveFormData(state);
-    }, 5000);
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [state]);
+  // useEffect(() => {
+  //   let timeout = setTimeout(() => {
+  //     saveFormData(state);
+  //   }, 5000);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, [state]);
 
   const [errors, setErrors] = useState<Errors<Form>>({});
 
@@ -413,7 +412,7 @@ export default function FormPage(props: { formID: number }) {
 
             {state.formFields.map((field) => {
               switch (field.kind) {
-                case "dropdown":
+                case "DROPDOWN":
                   return (
                     <DropdownField
                       key={field.id}
@@ -434,7 +433,7 @@ export default function FormPage(props: { formID: number }) {
                       }
                     />
                   );
-                case "radio":
+                case "RADIO":
                   return (
                     <RadioInputsField
                       key={field.id}
@@ -455,44 +454,7 @@ export default function FormPage(props: { formID: number }) {
                       }
                     />
                   );
-                case "textarea":
-                  return (
-                    <TextAreaField
-                      key={field.id}
-                      field={field}
-                      removeFieldCB={(id) =>
-                        dispatch({ type: "removeField", id: id })
-                      }
-                      editLabelCB={(id, value) =>
-                        dispatch({ type: "updateLabel", label: value, id: id })
-                      }
-                      preview={false}
-                    />
-                  );
-
-                case "multiselect":
-                  return (
-                    <MultiSelectField
-                      key={field.id}
-                      field={field}
-                      removeFieldCB={(id) =>
-                        dispatch({ type: "removeField", id: id })
-                      }
-                      editLabelCB={(id, value) =>
-                        dispatch({ type: "updateLabel", label: value, id: id })
-                      }
-                      preview={false}
-                      editOptionsCB={(id, options) =>
-                        dispatch({
-                          type: "updateOptions",
-                          id: id,
-                          options: options,
-                        })
-                      }
-                    />
-                  );
-
-                default:
+                case "TEXT":
                   return (
                     <TextField
                       key={field.id}
@@ -501,11 +463,65 @@ export default function FormPage(props: { formID: number }) {
                         dispatch({ type: "removeField", id: id })
                       }
                       editLabelCB={(id, value) =>
-                        dispatch({ type: "updateLabel", label: value, id: id })
+                        dispatch({
+                          type: "updateLabel",
+                          label: value,
+                          id: id,
+                        })
                       }
                       preview={false}
                     />
                   );
+
+                case "GENERIC":
+                  if (field.meta.type === "textarea") {
+                    return (
+                      <TextAreaField
+                        key={field.id}
+                        field={field}
+                        removeFieldCB={(id) =>
+                          dispatch({
+                            type: "removeField",
+                            id: id,
+                          })
+                        }
+                        editLabelCB={(id, value) =>
+                          dispatch({
+                            type: "updateLabel",
+                            label: value,
+                            id: id,
+                          })
+                        }
+                        preview={false}
+                      />
+                    );
+                  }
+                  if (field.meta.type === "multiselect") {
+                    return (
+                      <MultiSelectField
+                        key={field.id}
+                        field={field}
+                        removeFieldCB={(id) =>
+                          dispatch({ type: "removeField", id: id })
+                        }
+                        editLabelCB={(id, value) =>
+                          dispatch({
+                            type: "updateLabel",
+                            label: value,
+                            id: id,
+                          })
+                        }
+                        preview={false}
+                        editOptionsCB={(id, options) =>
+                          dispatch({
+                            type: "updateOptions",
+                            id: id,
+                            options: options,
+                          })
+                        }
+                      />
+                    );
+                  }
               }
             })}
           </>
@@ -556,7 +572,7 @@ export default function FormPage(props: { formID: number }) {
           onClick={() => saveFormData(state)}
           className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
-          Submit
+          Save
         </button>
         <button
           onClick={() => dispatch({ type: "clearForm" })}

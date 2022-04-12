@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
-import { MultiSelect } from "../types/custom";
+import { GenericInput } from "../types/custom";
 import { FormField, Answer } from "../types/custom";
 export default function MultiSelectField(props: {
   answer?: Answer;
-  field: MultiSelect;
+  field: GenericInput;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
   addValueCB?: (value: string[]) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
-  const [options, setOptions] = useState<Option[]>(props.field.options);
+  const [options, setOptions] = useState<Option[]>(
+    props.field.options ? props.field.options : []
+  );
 
   const changeOption = (value: string, id: number) => {
     const option = options.find((option) => option.id === id);
@@ -52,11 +54,12 @@ export default function MultiSelectField(props: {
             <option value="" disabled>
               Select your option
             </option>
-            {props.field.options.map((option, index) => (
-              <option className="" value={option.value} key={index}>
-                {option.value.toUpperCase()}
-              </option>
-            ))}
+            {props.field.options &&
+              props.field.options.map((option, index) => (
+                <option className="" value={option.value} key={index}>
+                  {option.value.toUpperCase()}
+                </option>
+              ))}
           </select>
         </div>
       ) : (

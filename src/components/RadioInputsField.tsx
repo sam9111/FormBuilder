@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
-import { RadioInputs } from "../types/custom";
+import { Radio } from "../types/custom";
 import { FormField, Answer } from "../types/custom";
 export default function RadioInputsField(props: {
   answer?: Answer;
-  field: RadioInputs;
+  field: Radio;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
