@@ -117,7 +117,7 @@ export default function FormPage(props: { formID: number }) {
   const [newField, setNewField] = useState("");
   const [newFieldKind, setNewFieldKind] = useState(FIELD_TYPES[0]);
   const titleRef = useRef<HTMLInputElement>(null);
-
+  const [errors, setErrors] = useState<Errors<Form>>({});
   const saveFormData = async (formData: FormData) => {
     const validationErrors = validateForm({
       title: formData.title || "",
@@ -206,6 +206,7 @@ export default function FormPage(props: { formID: number }) {
         return action.payload;
 
       case "updateFormDetails":
+        saveFormData(state);
         return {
           ...state,
           title: action.title,
@@ -310,8 +311,6 @@ export default function FormPage(props: { formID: number }) {
   //   };
   // }, [state]);
 
-  const [errors, setErrors] = useState<Errors<Form>>({});
-
   return (
     <div className="flex flex-col gap-4 p-4 divide-y-4 divide-dotted my-4">
       <div className="flex flex-col gap-4">
@@ -344,6 +343,7 @@ export default function FormPage(props: { formID: number }) {
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               value={state.title}
               onChange={(e) => {
+                e.preventDefault();
                 dispatch({
                   type: "updateFormDetails",
                   title: e.target.value,
@@ -360,6 +360,7 @@ export default function FormPage(props: { formID: number }) {
             <textarea
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               onChange={(e) => {
+                e.preventDefault();
                 dispatch({
                   type: "updateFormDetails",
                   title: state.title || "",
@@ -382,6 +383,7 @@ export default function FormPage(props: { formID: number }) {
               id="is_public"
               value={state.is_public ? "true" : "false"}
               onChange={(e) => {
+                e.preventDefault();
                 dispatch({
                   type: "updateFormDetails",
                   title: state.title || "",

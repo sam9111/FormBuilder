@@ -70,6 +70,7 @@ export default function MultiSelectField(props: {
               value={props.field.label}
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               onChange={(e) => {
+                e.preventDefault();
                 props.editLabelCB &&
                   props.editLabelCB(props.field.id, e.target.value);
               }}
