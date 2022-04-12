@@ -248,6 +248,9 @@ export default function FormPage(props: { formID: number }) {
         };
 
       case "updateOptions":
+        state.id &&
+          updateField(state.id, action.id, { options: action.options });
+
         return {
           ...state,
           formFields: state.formFields.map((field) => {

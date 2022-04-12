@@ -110,12 +110,16 @@ export default function MultiSelectField(props: {
                     onChange={(e) => {
                       e.preventDefault();
                       changeOption(e.target.value, option.id);
+                      props.editOptionsCB &&
+                        props.editOptionsCB(props.field.id, options);
                     }}
                   />
                   <button
                     className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
                     onClick={() => {
                       removeOption(option.id);
+                      props.editOptionsCB &&
+                        props.editOptionsCB(props.field.id, options);
                     }}
                   >
                     Remove
@@ -123,15 +127,6 @@ export default function MultiSelectField(props: {
                 </div>
               ))}
             </div>
-            <button
-              className="bg-blue-500 text-xs  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-              onClick={() =>
-                props.editOptionsCB &&
-                props.editOptionsCB(props.field.id, options)
-              }
-            >
-              Save
-            </button>
           </div>
         </div>
       )}
