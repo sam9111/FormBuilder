@@ -92,6 +92,10 @@ export const putForm = (id: number, payload: {
   return request(`forms/${id}/`, "PUT", payload);
 }
 
+export const deleteForm = (id: number) => {
+  return request(`forms/${id}/`, "DELETE");
+}
+
 //formFields
 export const getFormFields = (form_pk: number) => {
   return request(`forms/${form_pk}/fields/`, "GET")
