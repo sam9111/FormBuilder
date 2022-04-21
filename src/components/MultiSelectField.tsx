@@ -8,7 +8,7 @@ export default function MultiSelectField(props: {
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
-  addValueCB?: (value: string[]) => void;
+  addValueCB?: (value: string) => void;
   editOptionsCB?: (id: number, options: Option[]) => void;
 }) {
   const [options, setOptions] = useState<Option[]>(
@@ -46,7 +46,10 @@ export default function MultiSelectField(props: {
               e.preventDefault();
               props.addValueCB &&
                 props.addValueCB(
-                  Array.from(e.target.selectedOptions, (item) => item.value)
+                  Array.from(
+                    e.target.selectedOptions,
+                    (item) => item.value
+                  ).join()
                 );
             }}
             className="border-2 border-gray-200 p-2 rounded-lg  my-2 bg-white"

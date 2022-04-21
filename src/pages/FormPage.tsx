@@ -67,7 +67,7 @@ type ClearFormAction = {
   type: "clearForm";
 };
 
-const fetchForm = async (formID: number) => {
+export const fetchForm = async (formID: number) => {
   try {
     const formResponse: Form = await getForm(formID);
     const fieldsResponse = await getFormFields(formID);
@@ -100,7 +100,6 @@ const updateField = async (
 ) => {
   try {
     const response = await patchFormField(formID, fieldID, fieldData);
-    console.log(response);
   } catch (err) {
     console.log(err);
   }
@@ -319,12 +318,26 @@ export default function FormPage(props: { formID: number }) {
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h2 className=" text-xl  font-bold">Edit Form</h2>
-          <Link
-            href={`/preview/${props.formID}`}
-            className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-          >
-            Preview
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href={`/preview/${props.formID}`}
+              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            >
+              Preview
+            </Link>
+            <Link
+              href={`/submissions/${props.formID}`}
+              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            >
+              View Submissions
+            </Link>
+            <Link
+              href={`/submission/${props.formID}`}
+              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            >
+              Share
+            </Link>
+          </div>
         </div>
 
         <span className="text-gray-500 text-sm  font-semibold ">

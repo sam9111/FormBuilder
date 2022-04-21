@@ -55,8 +55,6 @@ export default function HomePage() {
     listForms();
   }, []);
 
-  console.log(previous);
-  console.log(next);
   return (
     <div>
       <div className="flex flex-col gap-2 my-4 p-4">

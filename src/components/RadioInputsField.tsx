@@ -42,9 +42,10 @@ export default function RadioInputsField(props: {
             <label className="text-lg  font-semibold " key={index}>
               <input
                 type="radio"
-                checked={props.field.value === option.value}
-                value={props.answer?.value || ""}
+                checked={props.answer?.value === option.value}
+                value={option.value}
                 onChange={(e) => {
+                  console.log(e.target.value);
                   props.addValueCB && props.addValueCB(e.target.value);
                 }}
               />

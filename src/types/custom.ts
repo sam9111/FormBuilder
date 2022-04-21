@@ -59,10 +59,7 @@ export const FIELD_TYPES = [
   "date",
 ];
 
-export type Answer = {
-  id: number;
-  value: string | string[];
-};
+
 
 
 export type Form = {
@@ -94,3 +91,19 @@ export const validateForm = (form: Form) => {
   }
   return errors;
 };
+
+
+
+export type Answer = {
+  form_field: number;
+  value: string;
+};
+
+export type Submission = {
+  answers: Answer[];
+  id?: number;
+  form?: Form;
+  created_date?: string;
+}
+
+

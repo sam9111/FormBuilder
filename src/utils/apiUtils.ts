@@ -1,5 +1,6 @@
-import { Form, FormField } from "../types/custom";
+import { Form, FormField, Submission } from "../types/custom";
 import { PaginationParams } from "../types/common"
+import { User } from "../types/usertypes"
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
 
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
@@ -116,3 +117,24 @@ export const patchFormField = (form_pk: number, id: number, payload: Partial<For
 export const deleteFormField = (form_pk: number, id: number) => {
   return request(`forms/${form_pk}/fields/${id}/`, "DELETE")
 }
+
+//submissions
+
+export const getSubmissions = (form_pk: number, pageParams: PaginationParams) => {
+  return request(`forms/${form_pk}/submission/`, "GET", pageParams)
+}
+
+export const postSubmission = (form_pk: number, payload: Submission) => {
+  return request(`forms/${form_pk}/submission/`, "POST", payload)
+}
+
+export const getSubmission = (form_pk: number, id: number) => {
+  return request(`forms/${form_pk}/submission/${id}`, "GET")
+}
+
+
+export const getCurrentUser = async (setCurrentUser: (user: User) => void) => {
+  const response = await me();
+  console.log(response);
+  setCurrentUser(response.username ? response : null);
+};
