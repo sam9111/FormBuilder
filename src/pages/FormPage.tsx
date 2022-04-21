@@ -11,6 +11,7 @@ import {
   putFormField,
   patchFormField,
   deleteFormField,
+  getCurrentUser,
 } from "../utils/apiUtils";
 import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";
@@ -18,6 +19,7 @@ import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import MultiSelectField from "../components/MultiSelectField";
 import { Errors, Form, validateForm } from "../types/custom";
+import { User } from "../types/usertypes";
 
 type FormAction =
   | AddAction
@@ -187,7 +189,7 @@ export default function FormPage(props: { formID: number }) {
           id: id,
           label: label,
           options: [],
-          value: [],
+          value: "",
           meta: {
             type: type,
           },
@@ -288,6 +290,7 @@ export default function FormPage(props: { formID: number }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    getCurrentUser();
     fetchForm(props.formID).then((formData) => {
       dispatch({
         type: "formReady",
@@ -303,15 +306,6 @@ export default function FormPage(props: { formID: number }) {
       document.title = "React Form";
     };
   }, []);
-
-  // useEffect(() => {
-  //   let timeout = setTimeout(() => {
-  //     saveFormData(state);
-  //   }, 5000);
-  //   return () => {
-  //     clearTimeout(timeout);
-  //   };
-  // }, [state]);
 
   return (
     <div className="flex flex-col gap-4 p-4 divide-y-4 divide-dotted my-4">

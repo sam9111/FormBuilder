@@ -3,9 +3,15 @@ import { Link, navigate } from "raviger";
 
 import { FormField, Form } from "../types/custom";
 import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
+import PaginationComponent from "../components/common/Pagination";
 
 import { useQueryParams } from "raviger";
-import { mock_test, getForms, deleteForm } from "../utils/apiUtils";
+import {
+  mock_test,
+  getForms,
+  deleteForm,
+  getCurrentUser,
+} from "../utils/apiUtils";
 import Modal from "../components/common/Modal";
 import CreateForm from "../components/CreateForm";
 import { Pagination } from "../types/common";
@@ -52,6 +58,7 @@ export default function HomePage() {
   };
 
   useEffect(() => {
+    getCurrentUser();
     listForms();
   }, []);
 
@@ -142,39 +149,12 @@ export default function HomePage() {
       <Modal open={newForm} closeCB={() => setNewForm(false)}>
         <CreateForm />
       </Modal>
-      <div className="flex items-center space-x-1 justify-center">
-        <button
-          onClick={() => previous}
-          className="flex items-center px-4 py-2 text-gray-500 bg-gray-300 rounded-md"
-        >
-          Previous
-        </button>
-
-        <button
-          onClick={() => listForms()}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          1
-        </button>
-        <button
-          onClick={() => listForms()}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          2
-        </button>
-        <button
-          onClick={() => listForms()}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          3
-        </button>
-        <button
-          onClick={() => next}
-          className="px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          Next
-        </button>
-      </div>
+      <PaginationComponent
+        count={count}
+        listCB={listForms}
+        previous={previous}
+        next={next}
+      />
     </div>
   );
 }

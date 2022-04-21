@@ -32,7 +32,7 @@ export type GenericInput = {
   kind: "GENERIC";
   label: string;
   options?: Option[];
-  value: string | string[];
+  value: string;
   meta: {
     type: string;
   }

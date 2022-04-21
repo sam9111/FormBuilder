@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from "raviger";
 
 import { Form } from "../types/custom";
-
+import { getCurrentUser } from "../utils/apiUtils";
 import { useQueryParams } from "raviger";
 import { getSubmissions } from "../utils/apiUtils";
 import Modal from "../components/common/Modal";
+import PaginationComponent from "../components/common/Pagination";
 import CreateForm from "../components/CreateForm";
 import { Pagination } from "../types/common";
 
@@ -18,10 +19,10 @@ export default function SubmissionsPage(props: { formID: number }) {
   const [previous, setPrevious] = useState<string | null>();
   const [next, setNext] = useState<string | null>();
 
-  const listSubmissions = async () => {
+  const listSubmissions = async (offset: number) => {
     try {
       const data: Pagination<Form> = await getSubmissions(props.formID, {
-        offset: 0,
+        offset: offset,
         limit: 5,
       });
 
@@ -38,7 +39,8 @@ export default function SubmissionsPage(props: { formID: number }) {
   };
 
   useEffect(() => {
-    listSubmissions();
+    getCurrentUser();
+    listSubmissions(0);
   }, []);
 
   return (
@@ -72,13 +74,9 @@ export default function SubmissionsPage(props: { formID: number }) {
                   key={submission.id}
                   className="flex flex-col bg-gray-100  rounded-lg p-4  gap-2  text-lg font-semibold"
                 >
-                  <span className="text-gray-500 text-sm ">
-                    {submission.id}
-                  </span>
-
                   <div className="flex flex-row items-center justify-between">
                     <div>
-                      <h3 className="">Submission {index + 1}</h3>
+                      <h3 className="">Submission {submission.id}</h3>
                       <p className="text-sm text-gray-500">
                         {/* {form.formFields.length} Questions */}
                       </p>
@@ -98,39 +96,12 @@ export default function SubmissionsPage(props: { formID: number }) {
           );
         })
       )}
-      <div className="flex items-center space-x-1 justify-center">
-        <button
-          onClick={() => previous}
-          className="flex items-center px-4 py-2 text-gray-500 bg-gray-300 rounded-md"
-        >
-          Previous
-        </button>
-
-        <button
-          onClick={() => listSubmissions()}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          1
-        </button>
-        <button
-          onClick={() => listSubmissions()}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          2
-        </button>
-        <button
-          onClick={() => listSubmissions()}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          3
-        </button>
-        <button
-          onClick={() => next}
-          className="px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md hover:bg-blue-700 hover:text-white"
-        >
-          Next
-        </button>
-      </div>
+      <PaginationComponent
+        count={count}
+        listCB={listSubmissions}
+        previous={previous}
+        next={next}
+      />
     </div>
   );
 }

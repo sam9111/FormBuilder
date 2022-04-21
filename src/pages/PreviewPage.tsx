@@ -1,6 +1,7 @@
 import { useState, useReducer, useEffect } from "react";
 
 import { fetchForm } from "./FormPage";
+import { getCurrentUser } from "../utils/apiUtils";
 import { FormField, Answer, FormData } from "../types/custom";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
@@ -48,6 +49,7 @@ export default function PreviewPage(props: { formID: number }) {
   const [showAnswers, setShowAnswers] = useState(false);
 
   useEffect(() => {
+    getCurrentUser();
     fetchForm(props.formID).then((formData) => {
       setForm(formData || initialState);
       dispatch({

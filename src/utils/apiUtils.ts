@@ -1,6 +1,7 @@
 import { Form, FormField, Submission } from "../types/custom";
 import { PaginationParams } from "../types/common"
 import { User } from "../types/usertypes"
+import { navigate } from "raviger"
 const API_BASE_URL = "https://tsapi.coronasafe.live/api/";
 
 type RequestMethod = "GET" | "POST" | "PATCH" | "DELETE" | "PUT";
@@ -133,8 +134,13 @@ export const getSubmission = (form_pk: number, id: number) => {
 }
 
 
-export const getCurrentUser = async (setCurrentUser: (user: User) => void) => {
+export const getCurrentUser = async (setCurrentUser?: (user: User) => void) => {
   const response = await me();
-  console.log(response);
-  setCurrentUser(response.username ? response : null);
+
+  if (!response.username) {
+    navigate("/login")
+  }
+
+  setCurrentUser && setCurrentUser(response.username ? response : null);
+
 };
