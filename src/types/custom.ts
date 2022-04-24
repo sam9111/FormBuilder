@@ -71,6 +71,18 @@ export type Form = {
   modified_date?: string;
 };
 
+export type Answer = {
+  form_field: number;
+  value: string;
+};
+
+export type Submission = {
+  answers: Answer[];
+  id?: number;
+  form?: Form;
+  created_date?: string;
+}
+
 export type FormData = Partial<Form> & { formFields: FormField[] };
 export type Errors<T> = Partial<Record<keyof T, string>>;
 
@@ -92,18 +104,20 @@ export const validateForm = (form: Form) => {
   return errors;
 };
 
+export const validateSubmission = (submission: Submission) => {
+  const errors: Errors<Submission> = {};
 
+  if (submission.answers.length < 1) {
+    errors.answers = "Answers are required";
+  }
 
-export type Answer = {
-  form_field: number;
-  value: string;
+  submission.answers.forEach((answer) => {
+    if (answer.value.length < 1) {
+      errors.answers = "Answer is required";
+    }
+  });
+  return errors;
 };
 
-export type Submission = {
-  answers: Answer[];
-  id?: number;
-  form?: Form;
-  created_date?: string;
-}
 
 

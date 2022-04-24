@@ -2,7 +2,14 @@ import { useState, useReducer, useEffect } from "react";
 
 import { fetchForm } from "./FormPage";
 import { postSubmission, getSubmission } from "../utils/apiUtils";
-import { FormField, Answer, FormData, Submission } from "../types/custom";
+import {
+  FormField,
+  Answer,
+  FormData,
+  Submission,
+  validateSubmission,
+  Errors,
+} from "../types/custom";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
@@ -54,6 +61,7 @@ export default function SubmissionPage(props: {
   const [showAnswers, setShowAnswers] = useState(false);
   const [submitted, setSubmitted] = useState(props.submitted);
   const [submittedAnswers, setSubmittedAnswers] = useState<Answer[]>([]);
+  const [errors, setErrors] = useState<Errors<Submission>>({});
 
   useEffect(() => {
     fetchForm(props.formID).then((formData) => {
@@ -178,22 +186,27 @@ export default function SubmissionPage(props: {
   }
 
   const handleSubmit = async () => {
-    try {
-      const submission: Submission = {
-        answers: [...answers],
-        form: {
-          title: form.title ? form.title : "",
-        },
-      };
+    const submission: Submission = {
+      answers: [...answers],
+      form: {
+        title: form.title ? form.title : "",
+      },
+    };
 
-      console.log(submission);
+    const validationErrors = validateSubmission(submission);
 
-      const response = await postSubmission(props.formID, submission);
-      console.log(response);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        const response = await postSubmission(props.formID, submission);
 
-      return response;
-    } catch (err) {
-      console.log(err);
+        navigate(`/submissions/${props.formID}/submission/${response.id}`);
+        window.location.reload();
+
+        return response;
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   return (
@@ -273,18 +286,14 @@ export default function SubmissionPage(props: {
             </div>
             <button
               onClick={() => {
-                handleSubmit().then((response) => {
-                  navigate(
-                    `/submissions/${props.formID}/submission/${response.id}`
-                  );
-                  window.location.reload();
-                });
+                handleSubmit();
               }}
               className=" bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
             >
               Submit
             </button>
           </div>
+          {errors.answers && <p className="text-red-500">{errors.answers}</p>}
         </div>
       ) : (
         <p className="text-center text-lg  mx-auto p-8">
