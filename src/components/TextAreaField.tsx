@@ -1,8 +1,8 @@
-import { TextArea } from "../types/custom";
+import { GenericInput } from "../types/custom";
 import { FormField, Answer } from "../types/custom";
 export default function TextAreaField(props: {
   answer?: Answer;
-  field: TextArea;
+  field: GenericInput;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
@@ -30,6 +30,7 @@ export default function TextAreaField(props: {
               value={props.field.label}
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               onChange={(e) => {
+                e.preventDefault();
                 props.editLabelCB &&
                   props.editLabelCB(props.field.id, e.target.value);
               }}

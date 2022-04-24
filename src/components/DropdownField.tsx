@@ -14,22 +14,23 @@ export default function DropdownField(props: {
   const [options, setOptions] = useState<Option[]>(props.field.options);
 
   const changeOption = (value: string, id: number) => {
-    const option = options.find((option) => option.id === id);
-    if (option) {
-      const newOption = {
-        ...option,
-        value: value,
-      };
-      setOptions(
-        options.map((option) => (option.id === id ? newOption : option))
-      );
-    } else {
-      setOptions([...options, { id: id, value: value }]);
-    }
+    const newOptions = options.map((option) =>
+      option.id === id
+        ? {
+            ...option,
+            value: value,
+          }
+        : option
+    );
+    setOptions(newOptions);
+
+    props.editOptionsCB && props.editOptionsCB(props.field.id, newOptions);
   };
 
   const removeOption = (id: number) => {
-    setOptions(options.filter((option) => option.id !== id));
+    const newOptions = options.filter((option) => option.id !== id);
+    setOptions(newOptions);
+    props.editOptionsCB && props.editOptionsCB(props.field.id, newOptions);
   };
 
   return (
@@ -63,6 +64,7 @@ export default function DropdownField(props: {
               value={props.field.label}
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               onChange={(e) => {
+                e.preventDefault();
                 props.editLabelCB &&
                   props.editLabelCB(props.field.id, e.target.value);
               }}
@@ -81,12 +83,13 @@ export default function DropdownField(props: {
             <button
               className="bg-blue-500 text-xs  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
               onClick={() => {
-                setOptions([
+                const newOptions = [
                   ...options,
                   { id: Number(new Date()), value: "untitled" },
-                ]);
+                ];
+                setOptions(newOptions);
                 props.editOptionsCB &&
-                  props.editOptionsCB(props.field.id, options);
+                  props.editOptionsCB(props.field.id, newOptions);
               }}
             >
               Add Option
@@ -115,15 +118,6 @@ export default function DropdownField(props: {
                 </div>
               ))}
             </div>
-            <button
-              className="bg-blue-500 text-xs  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
-              onClick={() =>
-                props.editOptionsCB &&
-                props.editOptionsCB(props.field.id, options)
-              }
-            >
-              Save
-            </button>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { FormData } from "../types/interfaces";
+import { FormData } from "../types/custom";
 
 export function getLocalForms() {
   const savedFormsJSON = localStorage.getItem("savedForms");

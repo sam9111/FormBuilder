@@ -1,8 +1,8 @@
-import { Text, Date, PhoneNumber, Email } from "../types/custom";
+import { Text } from "../types/custom";
 import { FormField, Answer } from "../types/custom";
 export default function TextField(props: {
   answer?: Answer;
-  field: Text | Date | PhoneNumber | Email;
+  field: Text;
   removeFieldCB?: (id: number) => void;
   editLabelCB?: (id: number, value: string) => void;
   preview: boolean;
@@ -14,7 +14,7 @@ export default function TextField(props: {
         <div className="flex flex-col mx-auto  gap-4">
           <label className="text-lg  font-semibold ">{props.field.label}</label>
           <input
-            type={props.field.kind}
+            type={props.field.meta.type}
             value={props.answer?.value || ""}
             className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
             onChange={(e) => {
@@ -31,6 +31,7 @@ export default function TextField(props: {
               value={props.field.label}
               className="border-2 border-gray-200 p-2 rounded-lg  my-2 flex-1"
               onChange={(e) => {
+                e.preventDefault();
                 props.editLabelCB &&
                   props.editLabelCB(props.field.id, e.target.value);
               }}
