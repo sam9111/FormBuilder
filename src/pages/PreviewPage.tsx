@@ -181,21 +181,21 @@ export default function PreviewPage(props: { formID: number }) {
               </h2>
               <button
                 onClick={() => dispatch({ type: "clearAnswer" })}
-                className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
               >
                 Reset
               </button>
               {showAnswers ? (
                 <button
                   onClick={() => setShowAnswers(false)}
-                  className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                  className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                 >
                   Close Answers
                 </button>
               ) : (
                 <button
                   onClick={() => setShowAnswers(true)}
-                  className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                  className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                 >
                   Show Answers
                 </button>
@@ -211,7 +211,7 @@ export default function PreviewPage(props: { formID: number }) {
                       form.formFields[currIndex - 1] ? currIndex - 1 : 0
                     );
                   }}
-                  className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                  className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                 >
                   Previous
                 </button>
@@ -224,7 +224,7 @@ export default function PreviewPage(props: { formID: number }) {
                       form.formFields[currIndex + 1] ? currIndex + 1 : currIndex
                     );
                   }}
-                  className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                  className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                 >
                   Next
                 </button>

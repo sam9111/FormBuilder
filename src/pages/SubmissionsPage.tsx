@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "raviger";
+import { Link, navigate } from "raviger";
 
 import { Form } from "../types/custom";
 import { getCurrentUser } from "../utils/apiUtils";
@@ -57,12 +57,12 @@ export default function SubmissionsPage(props: { formID: number }) {
           <p className="text-center text-lg  mx-auto p-8 my-8">
             No submissions found for this form
           </p>
-          <Link
-            href={`/submission/${props.formID}`}
-            className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          <button
+            onClick={() => navigate(`/submission/${props.formID}`)}
+            className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
           >
             Share
-          </Link>
+          </button>
         </div>
       ) : (
         state &&
@@ -84,7 +84,7 @@ export default function SubmissionsPage(props: { formID: number }) {
                     <div className="flex gap-4">
                       <Link
                         href={`/submissions/${props.formID}/submission/${submission.id}`}
-                        className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                        className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                       >
                         Open
                       </Link>

@@ -69,7 +69,7 @@ export default function HomePage() {
           <h2 className=" text-xl flex-1 font-bold">All Forms</h2>
           <button
             onClick={() => setNewForm(true)}
-            className="  text-sm  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            className="  text-sm  bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
           >
             Create
           </button>
@@ -100,7 +100,7 @@ export default function HomePage() {
               setSearchString("");
               setQuery("");
             }}
-            className=" text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            className=" text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
           >
             Clear
           </button>
@@ -128,15 +128,16 @@ export default function HomePage() {
                       </p>
                     </div>
                     <div className="flex gap-4">
-                      <Link
-                        href={`/forms/${form.id}`}
-                        className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                      <button
+                        onClick={() => navigate(`/forms/${form.id}`)}
+                        className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                       >
                         Open
-                      </Link>
+                      </button>
+
                       <button
                         onClick={() => form.id && removeForm(form.id)}
-                        className="text-sm bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                        className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                       >
                         Delete
                       </button>
