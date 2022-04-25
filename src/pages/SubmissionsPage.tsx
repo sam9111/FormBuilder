@@ -82,12 +82,16 @@ export default function SubmissionsPage(props: { formID: number }) {
                       </p>
                     </div>
                     <div className="flex gap-4">
-                      <Link
-                        href={`/submissions/${props.formID}/submission/${submission.id}`}
+                      <button
+                        onClick={() =>
+                          navigate(
+                            `/submissions/${props.formID}/submission/${submission.id}`
+                          )
+                        }
                         className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                       >
                         Open
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </div>
