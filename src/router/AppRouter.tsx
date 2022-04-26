@@ -1,26 +1,29 @@
 import { useRoutes } from "raviger";
 import AppContainer from "../AppContainer";
-import FormPage from "../pages/FormPage";
-import HomePage from "../pages/HomePage";
-import PreviewPage from "../pages/PreviewPage";
-import Login from "../components/Login";
 
 import { User } from "../types/usertypes";
-import SubmissionsPage from "../pages/SubmissionsPage";
 import SubmissionPage from "../pages/SubmissionPage";
+import React, { Suspense } from "react";
+
+const Home = React.lazy(() => import("../pages/HomePage"));
+const Login = React.lazy(() => import("../components/Login"));
+const Form = React.lazy(() => import("../pages/FormPage"));
+const Preview = React.lazy(() => import("../pages/PreviewPage"));
+const Submissions = React.lazy(() => import("../pages/SubmissionsPage"));
+const Submission = React.lazy(() => import("../pages/SubmissionPage"));
 
 const routes = {
-  "/": () => <HomePage />,
+  "/": () => <Home />,
   "/login": () => <Login />,
-  "/forms/:id": ({ id }: { id: string }) => <FormPage formID={Number(id)} />,
+  "/forms/:id": ({ id }: { id: string }) => <Form formID={Number(id)} />,
   "/preview/:formID": ({ formID }: { formID: string }) => (
-    <PreviewPage formID={Number(formID)} />
+    <Preview formID={Number(formID)} />
   ),
   "/submissions/:formID": ({ formID }: { formID: string }) => (
-    <SubmissionsPage formID={Number(formID)} />
+    <Submissions formID={Number(formID)} />
   ),
   "/submission/:formID": ({ formID }: { formID: string }) => (
-    <SubmissionPage formID={Number(formID)} submitted={false} />
+    <Submission formID={Number(formID)} submitted={false} />
   ),
   "/submissions/:formID/submission/:submissionID": ({
     formID,
@@ -29,7 +32,7 @@ const routes = {
     formID: string;
     submissionID: string;
   }) => (
-    <SubmissionPage
+    <Submission
       formID={Number(formID)}
       submitted={true}
       submission_id={Number(submissionID)}
@@ -41,7 +44,9 @@ export default function AppRouter(props: { currentUser: User }) {
   const routeResult = useRoutes(routes);
   return (
     (
-      <AppContainer currentUser={props.currentUser}>{routeResult}</AppContainer>
+      <AppContainer currentUser={props.currentUser}>
+        <Suspense fallback={<div>Loading...</div>}>{routeResult}</Suspense>
+      </AppContainer>
     ) || <div className="">404</div>
   );
 }

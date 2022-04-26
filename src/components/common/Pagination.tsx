@@ -17,8 +17,9 @@ export default function PaginationComponent(props: {
       >
         Previous
       </button>
-      {pages.map((p) => (
+      {pages.map((p, index) => (
         <button
+          key={index}
           onClick={() => listCB(p * 5)}
           className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-700 focus:bg-gray-700 focus:text-white  hover:text-white"
         >
