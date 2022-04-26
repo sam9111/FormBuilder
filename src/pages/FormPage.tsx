@@ -17,6 +17,7 @@ import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
+import RatingField from "../components/RatingField";
 import MultiSelectField from "../components/MultiSelectField";
 import { Errors, Form, validateForm } from "../types/custom";
 import { User } from "../types/usertypes";
@@ -174,6 +175,17 @@ export default function FormPage(props: { formID: number }) {
         };
         break;
       case "textarea":
+        fieldData = {
+          id: id,
+          kind: "GENERIC",
+          label: label,
+          meta: {
+            type: type,
+          },
+          value: "",
+        };
+        break;
+      case "rating":
         fieldData = {
           id: id,
           kind: "GENERIC",
@@ -533,6 +545,31 @@ export default function FormPage(props: { formID: number }) {
                       />
                     );
                   }
+                  if (field.meta.type === "rating") {
+                    return (
+                      <RatingField
+                        key={field.id}
+                        field={field}
+                        removeFieldCB={(id) =>
+                          dispatch({
+                            type: "removeField",
+                            id: id,
+                          })
+                        }
+                        editLabelCB={(id, value) =>
+                          dispatch({
+                            type: "updateLabel",
+                            label: value,
+                            id: id,
+                          })
+                        }
+                        preview={false}
+                      />
+                    );
+                  }
+                  break;
+                default:
+                  return null;
               }
             })}
           </>

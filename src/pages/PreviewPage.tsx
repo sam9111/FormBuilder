@@ -8,6 +8,7 @@ import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import TextField from "../components/TextField";
 import MultiSelectField from "../components/MultiSelectField";
+import RatingField from "../components/RatingField";
 
 const initialAnswers: (form: FormData) => Answer[] = (form) => {
   return form.formFields.map((field) => {
@@ -134,6 +135,22 @@ export default function PreviewPage(props: { formID: number }) {
         } else if (fieldState.meta.type === "multiselect") {
           return (
             <MultiSelectField
+              answer={answer}
+              key={fieldState.id}
+              field={fieldState}
+              preview={true}
+              addValueCB={(value: string) => {
+                dispatch({
+                  type: "setAnswer",
+                  id: fieldState.id,
+                  value: value,
+                });
+              }}
+            />
+          );
+        } else if (fieldState.meta.type === "rating") {
+          return (
+            <RatingField
               answer={answer}
               key={fieldState.id}
               field={fieldState}

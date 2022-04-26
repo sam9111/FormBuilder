@@ -14,6 +14,7 @@ import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
 import TextField from "../components/TextField";
+import RatingField from "../components/RatingField";
 import MultiSelectField from "../components/MultiSelectField";
 import { navigate } from "raviger";
 
@@ -155,6 +156,23 @@ export default function SubmissionPage(props: {
         } else if (fieldState.meta.type === "multiselect") {
           return (
             <MultiSelectField
+              answer={answer}
+              key={fieldState.id}
+              field={fieldState}
+              preview={true}
+              addValueCB={(value: string) => {
+                dispatch({
+                  type: "setAnswer",
+                  id: fieldState.id,
+                  value: value,
+                });
+              }}
+            />
+          );
+        }
+        if (fieldState.meta.type === "rating") {
+          return (
+            <RatingField
               answer={answer}
               key={fieldState.id}
               field={fieldState}
