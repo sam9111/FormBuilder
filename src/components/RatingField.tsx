@@ -1,7 +1,7 @@
 import { GenericInput } from "../types/custom";
-import { FormField, Answer } from "../types/custom";
+import { Answer } from "../types/custom";
 import StarRating from "react-svg-star-rating";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 export default function RatingField(props: {
   answer?: Answer;
   field: GenericInput;

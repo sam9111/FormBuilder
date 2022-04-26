@@ -4,8 +4,7 @@ import FormPage from "../pages/FormPage";
 import HomePage from "../pages/HomePage";
 import PreviewPage from "../pages/PreviewPage";
 import Login from "../components/Login";
-import { useEffect, useState } from "react";
-import { me } from "../utils/apiUtils";
+
 import { User } from "../types/usertypes";
 import SubmissionsPage from "../pages/SubmissionsPage";
 import SubmissionPage from "../pages/SubmissionPage";

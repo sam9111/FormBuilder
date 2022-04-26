@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { Radio } from "../types/custom";
-import { FormField, Answer } from "../types/custom";
+import { Answer } from "../types/custom";
 export default function RadioInputsField(props: {
   answer?: Answer;
   field: Radio;

@@ -6,9 +6,8 @@ export default function PaginationComponent(props: {
 }) {
   const { count, listCB, previous, next } = props;
   const num_pages = Math.ceil(count / 5);
-  console.log(num_pages);
+
   const pages = Array.from(Array(num_pages).keys());
-  console.log(pages);
 
   return (
     <div className="flex items-center space-x-1 justify-center">

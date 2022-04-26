@@ -3,7 +3,6 @@ import { useState, useReducer, useEffect } from "react";
 import { fetchForm } from "./FormPage";
 import { postSubmission, getSubmission } from "../utils/apiUtils";
 import {
-  FormField,
   Answer,
   FormData,
   Submission,
@@ -59,7 +58,6 @@ export default function SubmissionPage(props: {
 
   const [currIndex, setIndex] = useState(0);
 
-  const [showAnswers, setShowAnswers] = useState(false);
   const [submitted, setSubmitted] = useState(props.submitted);
   const [submittedAnswers, setSubmittedAnswers] = useState<Answer[]>([]);
   const [errors, setErrors] = useState<Errors<Submission>>({});
@@ -74,7 +72,6 @@ export default function SubmissionPage(props: {
 
     if (props.submitted && props.submission_id) {
       getSubmission(props.formID, props.submission_id).then((submission) => {
-        console.log(submission);
         setSubmittedAnswers(submission.answers);
       });
     }

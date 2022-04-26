@@ -1,5 +1,5 @@
 import { Text } from "../types/custom";
-import { FormField, Answer } from "../types/custom";
+import { Answer } from "../types/custom";
 export default function TextField(props: {
   answer?: Answer;
   field: Text;
