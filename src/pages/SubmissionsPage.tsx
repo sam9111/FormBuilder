@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
-import { Link, navigate } from "raviger";
+import { navigate } from "raviger";
 
 import { Form } from "../types/custom";
 import { getCurrentUser } from "../utils/apiUtils";
-import { useQueryParams } from "raviger";
+
 import { getSubmissions } from "../utils/apiUtils";
-import Modal from "../components/common/Modal";
+
 import PaginationComponent from "../components/common/Pagination";
-import CreateForm from "../components/CreateForm";
+
 import { Pagination } from "../types/common";
 
 export default function SubmissionsPage(props: { formID: number }) {
   const [state, setState] = useState<Form[]>();
-  const [{ search }, setQuery] = useQueryParams();
-  const [searchString, setSearchString] = useState("");
-  const [newForm, setNewForm] = useState(false);
+
   const [count, setCount] = useState(0);
   const [previous, setPrevious] = useState<string | null>();
   const [next, setNext] = useState<string | null>();
@@ -25,9 +23,6 @@ export default function SubmissionsPage(props: { formID: number }) {
         offset: offset,
         limit: 5,
       });
-
-      console.log(data);
-      console.log(count);
 
       setState(data.results);
       setCount(data.count);
@@ -52,7 +47,7 @@ export default function SubmissionsPage(props: { formID: number }) {
           </h2>
         </div>
       </div>
-      {count == 0 ? (
+      {count === 0 ? (
         <div className=" flex rounded-lg bg-gray-100 px-8 py-2 m-8 justify-between items-center my-4 p-4 ">
           <p className="text-center text-lg  mx-auto p-8 my-8">
             No submissions found for this form

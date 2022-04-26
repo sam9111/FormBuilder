@@ -1,5 +1,5 @@
 import { GenericInput } from "../types/custom";
-import { FormField, Answer } from "../types/custom";
+import { Answer } from "../types/custom";
 export default function TextAreaField(props: {
   answer?: Answer;
   field: GenericInput;

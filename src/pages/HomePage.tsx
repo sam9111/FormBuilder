@@ -1,27 +1,14 @@
 import { useEffect, useState } from "react";
-import { Link, navigate } from "raviger";
+import { navigate } from "raviger";
 
-import { FormField, Form } from "../types/custom";
-import { getLocalForms, saveLocalForms } from "../utils/storageUtils";
+import { Form } from "../types/custom";
 import PaginationComponent from "../components/common/Pagination";
 
 import { useQueryParams } from "raviger";
-import {
-  mock_test,
-  getForms,
-  deleteForm,
-  getCurrentUser,
-} from "../utils/apiUtils";
+import { getForms, deleteForm, getCurrentUser } from "../utils/apiUtils";
 import Modal from "../components/common/Modal";
 import CreateForm from "../components/CreateForm";
 import { Pagination } from "../types/common";
-// const initialFormFields: FormField[] = [
-//   { id: 1, label: "First Name", kind: "text", value: "" },
-//   { id: 2, label: "Last Name", kind: "text", value: "" },
-//   { id: 3, label: "Email", kind: "email", value: "" },
-//   { id: 4, label: "Phone Number", kind: "tel", value: "" },
-//   { id: 5, label: "Date of Birth", kind: "date", value: "" },
-// ];
 
 export default function HomePage() {
   const [state, setState] = useState<Form[]>();

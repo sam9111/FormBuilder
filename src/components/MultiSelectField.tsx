@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Option } from "../types/interfaces";
 import { GenericInput } from "../types/custom";
-import { FormField, Answer } from "../types/custom";
+import { Answer } from "../types/custom";
 export default function MultiSelectField(props: {
   answer?: Answer;
   field: GenericInput;

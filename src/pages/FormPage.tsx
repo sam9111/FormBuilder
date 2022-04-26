@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef, useReducer } from "react";
+import { useEffect, useState, useReducer } from "react";
 import moment from "moment";
-import { Link, navigate } from "raviger";
+import { navigate } from "raviger";
 import { Option } from "../types/interfaces";
 import { FormField, FIELD_TYPES, FormData } from "../types/custom";
 import {
@@ -8,7 +8,6 @@ import {
   putForm,
   getFormFields,
   postFormField,
-  putFormField,
   patchFormField,
   deleteFormField,
   getCurrentUser,
@@ -20,7 +19,6 @@ import TextAreaField from "../components/TextAreaField";
 import RatingField from "../components/RatingField";
 import MultiSelectField from "../components/MultiSelectField";
 import { Errors, Form, validateForm } from "../types/custom";
-import { User } from "../types/usertypes";
 
 type FormAction =
   | AddAction
@@ -91,7 +89,7 @@ export const fetchForm = async (formID: number) => {
 
 const createField = async (formID: number, fieldData: FormField) => {
   try {
-    const response = await postFormField(formID, fieldData);
+    await postFormField(formID, fieldData);
   } catch (err) {
     console.log(err);
   }
@@ -102,14 +100,14 @@ const updateField = async (
   fieldData: Partial<FormField>
 ) => {
   try {
-    const response = await patchFormField(formID, fieldID, fieldData);
+    await patchFormField(formID, fieldID, fieldData);
   } catch (err) {
     console.log(err);
   }
 };
 const deleteField = async (formID: number, fieldID: number) => {
   try {
-    const response = await deleteFormField(formID, fieldID);
+    await deleteFormField(formID, fieldID);
   } catch (err) {
     console.log(err);
   }
@@ -130,7 +128,7 @@ export default function FormPage(props: { formID: number }) {
     if (Object.keys(validationErrors).length === 0) {
       try {
         if (formData.id && formData.title) {
-          const response: Form = await putForm(formData.id, {
+          await putForm(formData.id, {
             title: formData.title,
             description: formData.description,
             is_public: formData.is_public,
