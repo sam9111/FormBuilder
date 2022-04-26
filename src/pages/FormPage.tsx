@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useReducer } from "react";
 import moment from "moment";
-import { Link } from "raviger";
+import { Link, navigate } from "raviger";
 import { Option } from "../types/interfaces";
 import { FormField, FIELD_TYPES, FormData } from "../types/custom";
 import {
@@ -17,6 +17,7 @@ import TextField from "../components/TextField";
 import DropdownField from "../components/DropdownField";
 import RadioInputsField from "../components/RadioInputsField";
 import TextAreaField from "../components/TextAreaField";
+import RatingField from "../components/RatingField";
 import MultiSelectField from "../components/MultiSelectField";
 import { Errors, Form, validateForm } from "../types/custom";
 import { User } from "../types/usertypes";
@@ -117,7 +118,7 @@ const deleteField = async (formID: number, fieldID: number) => {
 export default function FormPage(props: { formID: number }) {
   const [newField, setNewField] = useState("");
   const [newFieldKind, setNewFieldKind] = useState(FIELD_TYPES[0]);
-  const titleRef = useRef<HTMLInputElement>(null);
+
   const [errors, setErrors] = useState<Errors<Form>>({});
   const saveFormData = async (formData: FormData) => {
     const validationErrors = validateForm({
@@ -174,6 +175,17 @@ export default function FormPage(props: { formID: number }) {
         };
         break;
       case "textarea":
+        fieldData = {
+          id: id,
+          kind: "GENERIC",
+          label: label,
+          meta: {
+            type: type,
+          },
+          value: "",
+        };
+        break;
+      case "rating":
         fieldData = {
           id: id,
           kind: "GENERIC",
@@ -301,7 +313,7 @@ export default function FormPage(props: { formID: number }) {
 
   useEffect(() => {
     document.title = "Form Edit";
-    titleRef.current?.focus();
+
     return () => {
       document.title = "React Form";
     };
@@ -313,24 +325,24 @@ export default function FormPage(props: { formID: number }) {
         <div className="flex justify-between items-center">
           <h2 className=" text-xl  font-bold">Edit Form</h2>
           <div className="flex gap-2">
-            <Link
-              href={`/preview/${props.formID}`}
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            <button
+              onClick={() => navigate(`/preview/${props.formID}`)}
+              className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
             >
               Preview
-            </Link>
-            <Link
-              href={`/submissions/${props.formID}`}
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            </button>
+            <button
+              onClick={() => navigate(`/submissions/${props.formID}`)}
+              className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
             >
               View Submissions
-            </Link>
-            <Link
-              href={`/submission/${props.formID}`}
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+            </button>
+            <button
+              onClick={() => navigate(`/submission/${props.formID}`)}
+              className="text-sm bg-blue-500 hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
             >
               Share
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -361,7 +373,6 @@ export default function FormPage(props: { formID: number }) {
                   is_public: state.is_public || false,
                 });
               }}
-              ref={titleRef}
             />
             {errors.title && <p className="text-red-500">{errors.title}</p>}
           </div>
@@ -534,6 +545,31 @@ export default function FormPage(props: { formID: number }) {
                       />
                     );
                   }
+                  if (field.meta.type === "rating") {
+                    return (
+                      <RatingField
+                        key={field.id}
+                        field={field}
+                        removeFieldCB={(id) =>
+                          dispatch({
+                            type: "removeField",
+                            id: id,
+                          })
+                        }
+                        editLabelCB={(id, value) =>
+                          dispatch({
+                            type: "updateLabel",
+                            label: value,
+                            id: id,
+                          })
+                        }
+                        preview={false}
+                      />
+                    );
+                  }
+                  break;
+                default:
+                  return null;
               }
             })}
           </>
@@ -574,7 +610,7 @@ export default function FormPage(props: { formID: number }) {
                 kind: newFieldKind,
               });
           }}
-          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Add Field
         </button>
@@ -582,22 +618,22 @@ export default function FormPage(props: { formID: number }) {
       <div className="flex gap-2 ">
         <button
           onClick={() => saveFormData(state)}
-          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Save
         </button>
         <button
           onClick={() => dispatch({ type: "clearForm" })}
-          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+          className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Clear Form
         </button>
-        <Link
-          href={`/`}
-          className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+        <button
+          onClick={() => navigate("/")}
+          className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
         >
           Close Form
-        </Link>
+        </button>
       </div>
     </div>
   );

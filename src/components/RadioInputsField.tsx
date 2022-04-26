@@ -69,7 +69,7 @@ export default function RadioInputsField(props: {
             />
 
             <button
-              className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+              className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
               onClick={() => {
                 props.removeFieldCB && props.removeFieldCB(props.field.id);
               }}
@@ -79,7 +79,7 @@ export default function RadioInputsField(props: {
           </div>
           <div className="">
             <button
-              className="bg-blue-500 text-xs  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+              className="bg-blue-500 text-xs  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
               onClick={() => {
                 const newOptions = [
                   ...options,
@@ -106,7 +106,7 @@ export default function RadioInputsField(props: {
                     }}
                   />
                   <button
-                    className="bg-blue-500 text-sm  hover:bg-blue-700 text-white font-bold py-2 px-4 my-4 rounded-lg"
+                    className="bg-blue-500 text-sm  hover:bg-blue-700 focus:bg-blue-700  text-white font-bold py-2 px-4 my-4 rounded-lg"
                     onClick={() => {
                       removeOption(option.id);
                     }}

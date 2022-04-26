@@ -14,14 +14,14 @@ export default function PaginationComponent(props: {
     <div className="flex items-center space-x-1 justify-center">
       <button
         onClick={() => previous}
-        className="flex items-center px-4 py-2 text-gray-500 bg-gray-300 rounded-md"
+        className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-700 focus:bg-gray-700 focus:text-white  hover:text-white"
       >
         Previous
       </button>
       {pages.map((p) => (
         <button
           onClick={() => listCB(p * 5)}
-          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-blue-700 hover:text-white"
+          className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-700 focus:bg-gray-700 focus:text-white  hover:text-white"
         >
           {p + 1}
         </button>
@@ -29,7 +29,7 @@ export default function PaginationComponent(props: {
 
       <button
         onClick={() => next}
-        className="px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md hover:bg-blue-700 hover:text-white"
+        className="px-4 py-2 font-bold text-gray-500 bg-gray-300 rounded-md hover:bg-gray-700 focus:bg-gray-700  focus:text-white  hover:text-white"
       >
         Next
       </button>

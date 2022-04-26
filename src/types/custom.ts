@@ -57,6 +57,7 @@ export const FIELD_TYPES = [
   "email",
   "tel",
   "date",
+  "rating"
 ];
 
 
